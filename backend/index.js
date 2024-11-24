@@ -6,10 +6,10 @@ import usuarioRoutes from './routes/usuarioRoutes.js';
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Aplicar middlewares generales
+// aplicar middlewares generales
 applyMiddlewares(app);
 
-// Rutas
+// rutas
 app.use('/usuarios', usuarioRoutes);
 
 // Middleware para manejar errores
