@@ -5,23 +5,27 @@ const BottomNavbar = ({ navigation }) => {
   const [index, setIndex] = useState(0);
 
   const routes = [
-    { key: 'home', title: 'Inicio', icon: 'home' },
-    { key: 'cursos', title: 'Cursos', icon: 'book' },
-    { key: 'comunidad', title: 'Comunidad', icon: 'account-group' },
-    { key: 'perfil', title: 'Mi Perfil', icon: 'account' },
+    { key: 'Home', title: 'Inicio', icon: 'home' },
+    { key: 'Cursos', title: 'Cursos', icon: 'book' },
+    { key: 'Comunidad', title: 'Comunidad', icon: 'account-group' },
+    { key: 'Perfil', title: 'Mi Perfil', icon: 'account' },
   ];
 
   const handleIndexChange = (newIndex) => {
     setIndex(newIndex);
     const routeName = routes[newIndex].key;
-    navigation.navigate(routeName);
+    if (navigation && navigation.navigate) {
+      navigation.navigate(routeName);
+    } else {
+      console.error('El objeto navigation no está definido.');
+    }
   };
 
   const renderScene = BottomNavigation.SceneMap({
-    home: () => null,
-    cursos: () => null,
-    comunidad: () => null,
-    perfil: () => null,
+    Home: () => null,
+    Cursos: () => null,
+    Comunidad: () => null,
+    Perfil: () => null,
   });
 
   return (

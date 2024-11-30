@@ -13,7 +13,7 @@ const lessonSchema = new mongoose.Schema({
   video: { type: String, required: false },
   time: { type: Number, required: true }, // en minutos
   summary: { type: String, required: false }, // puede ser un string o un array si es listado
-  category: { type: String, required: true },
+  category: { type: Array, required: true },
 });
 
 const moduleSchema = new mongoose.Schema({
@@ -23,7 +23,7 @@ const moduleSchema = new mongoose.Schema({
   description: { type: String, required: true },
   goal: { type: String, required: true },
   courseLevel: { type: String, required: true },
-  category: { type: String, required: true },
+  category: { type: Array, required: true },
   lessons: [lessonSchema], // Array de lecciones que componen el curso
   createdAt: { type: Date, default: Date.now },
 });

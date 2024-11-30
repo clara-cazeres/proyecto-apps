@@ -2,6 +2,7 @@ import express from 'express';
 import { conectarDB } from './database/connection.js';
 import { applyMiddlewares, manejarErrores } from './middlewares/middlewares.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
+import moduleRoutes from './routes/moduleRoutes.js';
 import dotenv from 'dotenv';
 
 
@@ -22,6 +23,8 @@ app.get('/', (req, res) => {
 
 //rutas
 app.use('/usuarios', usuarioRoutes);
+
+app.use('/modules', moduleRoutes);
 
 // Middleware para manejar errores
 app.use(manejarErrores);

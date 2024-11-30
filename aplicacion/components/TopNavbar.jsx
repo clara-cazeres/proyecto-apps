@@ -5,7 +5,18 @@ import { Appbar } from 'react-native-paper';
 const TopNavbar = ({ navigation, title }) => {
   return (
     <Appbar.Header style={styles.appbar}>
-      <Appbar.Action icon="menu" color="#FFFFFF" onPress={() => navigation.openDrawer()} />
+      {/* Verifica que `navigation` esté definido antes de usarlo */}
+      <Appbar.Action
+        icon="menu"
+        color="#FFFFFF"
+        onPress={() => {
+          if (navigation && navigation.openDrawer) {
+            navigation.openDrawer();
+          } else {
+            console.error('El objeto navigation no está definido.');
+          }
+        }}
+      />
       {title === 'Inicio' ? (
         <Image source={require('../assets/logotipo-sa.png')} style={styles.logo} />
       ) : (
