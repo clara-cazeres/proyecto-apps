@@ -1,49 +1,76 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import authStyles from '../../styles/auth-styles';
-import { ScrollView } from 'react-native-gesture-handler';
+import { iniciarSesion } from '../../api/apiServices';
+
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/authSlice';
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [credentials, setCredentials] = useState({
+    email: '',
+    password: '',
+  });
 
+  // Usa el hook useDispatch para obtener el dispatch
+  const dispatch = useDispatch();
+
+  const handleLogin = async () => {
+    console.log('Intentando iniciar sesión con:', credentials);
+  
+    try {
+      const data = await iniciarSesion(credentials); // Llama al servicio de login
+      console.log('Respuesta del backend:', data);
+  
+      const { token, user } = data;
+      if (token) {
+        console.log('Token recibido:', token);
+  
+        // Despacha la acción de login
+        dispatch(login({ token, user }));
+  
+        Alert.alert('Éxito', 'Inicio de sesión exitoso');
+        navigation.navigate('Home'); // Redirige a la pantalla principal
+      } else {
+        Alert.alert('Error', 'No se recibió un token');
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error.message);
+      Alert.alert('Error', error.message || 'Credenciales incorrectas');
+    }
+  };
+  
   return (
     <ScrollView style={authStyles.container}>
-      {/* Botón para volver */}
       <TouchableOpacity style={authStyles.backButton} onPress={() => navigation.goBack()}>
         <Text style={authStyles.backText}>←</Text>
       </TouchableOpacity>
 
-      {/* Logo */}
       <Image source={require('../../assets/imagotipo-azul.png')} style={authStyles.logo} />
 
-      {/* Título */}
-      <Text style={authStyles.title}>Iniciar sesión</Text>
+      <Text style={authStyles.title}>Inicio de sesión</Text>
 
-      {/* Inputs */}
       <Input
         placeholder="Mail"
-        value={email}
-        onChangeText={setEmail}
+        value={credentials.email}
+        onChangeText={(text) => setCredentials({ ...credentials, email: text })}
         keyboardType="email-address"
       />
       <Input
         placeholder="Contraseña"
-        value={password}
-        onChangeText={setPassword}
+        value={credentials.password}
+        onChangeText={(text) => setCredentials({ ...credentials, password: text })}
         secureTextEntry
       />
 
-      {/* Botón de iniciar sesión */}
-      <Button title="INICIAR SESIÓN" onPress={() => {}} />
+      <Button title="INICIAR SESIÓN" onPress={handleLogin} />
 
-      {/* Texto de registro */}
       <Text style={authStyles.footerText}>
-        ¿No estás registrado?{' '}
+        ¿No tienes cuenta?{' '}
         <Text style={authStyles.linkText} onPress={() => navigation.navigate('Registro')}>
-          Registrarme
+          Regístrate
         </Text>
       </Text>
     </ScrollView>

@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, Keyboard } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // Asegúrate de usar este paquete
+import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import authStyles from '../../styles/auth-styles';
+import { registrarUsuario } from '../../api/apiServices';
+
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/authSlice';
 
 const RegistroScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -14,6 +18,42 @@ const RegistroScreen = ({ navigation }) => {
     birthDate: '',
     gender: '',
   });
+
+  const validarFecha = (fecha) => {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(fecha);
+  };
+
+  const handleRegister = async () => {
+    if (!validarFecha(formData.birthDate)) {
+      Alert.alert('Error', 'Por favor, ingresa una fecha válida (YYYY-MM-DD)');
+      return;
+    }
+  
+    console.log('Datos enviados al backend:', formData);
+  
+    try {
+      const data = await registrarUsuario(formData); // Llama al servicio de registro
+      console.log('Respuesta recibida del backend:', data);
+  
+      const { token, user } = data;
+      if (token) {
+        console.log('Token recibido:', token);
+  
+        // Despacha la acción de login
+        dispatch(login({ token, user }));
+  
+        Alert.alert('Éxito', 'Registro exitoso. Redirigiendo al inicio...');
+        navigation.navigate('Home'); // Redirige a la pantalla principal
+      } else {
+        Alert.alert('Error', 'No se recibió un token');
+      }
+    } catch (error) {
+      console.error('Error durante el registro:', error.message);
+      Alert.alert('Error', error.message || 'No se pudo completar el registro');
+    }
+  };
+  
 
   return (
     <ScrollView style={authStyles.container}>
@@ -53,7 +93,6 @@ const RegistroScreen = ({ navigation }) => {
         onChangeText={(text) => setFormData({ ...formData, birthDate: text })}
       />
 
-      {/* Picker para género */}
       <View style={authStyles.pickerContainer}>
         <Picker
           selectedValue={formData.gender}
@@ -66,7 +105,7 @@ const RegistroScreen = ({ navigation }) => {
         </Picker>
       </View>
 
-      <Button title="REGISTRARME" onPress={() => {}} />
+      <Button title="REGISTRARME" onPress={handleRegister} />
 
       <Text style={authStyles.footerText}>
         ¿Ya tienes cuenta?{' '}

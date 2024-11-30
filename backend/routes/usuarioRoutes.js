@@ -5,9 +5,7 @@ import Usuario from '../models/Usuario.js';
 
 const router = express.Router();
 
-
-//get usuarios 
-
+// Obtener usuarios
 router.get('/', async (req, res) => {
   try {
     const usuarios = await Usuario.find(); // Obtiene todos los usuarios
@@ -17,23 +15,25 @@ router.get('/', async (req, res) => {
   }
 });
 
-
-// Registro de usuario
 // Registro de usuario
 router.post('/registro', async (req, res, next) => {
   try {
+    console.log('Petición recibida para registro:', req.body);
+
     const { username, email, password, name = '', birthDate } = req.body;
 
     // Verificar si el usuario o email ya existen
     const usuarioExistente = await Usuario.findOne({ $or: [{ username }, { email }] });
     if (usuarioExistente) {
+      console.log('Error: El usuario o el correo ya están registrados');
       return res.status(400).json({ mensaje: 'El usuario o el correo ya están registrados' });
     }
 
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('Contraseña hasheada exitosamente');
 
-    // Crear el nuevo usuario con todos los campos inicializados
+    // Crear el nuevo usuario
     const nuevoUsuario = new Usuario({
       name,
       username,
@@ -54,14 +54,31 @@ router.post('/registro', async (req, res, next) => {
     });
 
     await nuevoUsuario.save();
-    res.status(201).json({ mensaje: 'Usuario registrado exitosamente', usuario: nuevoUsuario });
+    console.log('Usuario guardado en la base de datos:', nuevoUsuario);
+
+    // Generar token JWT
+    const token = jwt.sign(
+      { id: nuevoUsuario._id, username: nuevoUsuario.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    console.log('Token generado:', token);
+
+    res.status(201).json({
+      mensaje: 'Usuario registrado exitosamente',
+      usuario: nuevoUsuario,
+      token,
+    });
+    console.log('Respuesta enviada:', {
+      mensaje: 'Usuario registrado exitosamente',
+      usuario: nuevoUsuario,
+      token,
+    });
   } catch (error) {
-    next(error); // Pasar el error al middleware de manejo de errores
+    console.error('Error durante el registro:', error.message);
+    next(error);
   }
 });
-
-
-
 
 // Login de usuario
 router.post('/login', async (req, res, next) => {
@@ -82,28 +99,24 @@ router.post('/login', async (req, res, next) => {
 
     // Generar el token JWT
     const token = jwt.sign(
-      { id: usuario._id, username: usuario.username }, // Información dentro del token
-      process.env.JWT_SECRET, // Clave secreta
-      { expiresIn: '1h' } // Tiempo de expiración
+      { id: usuario._id, username: usuario.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
     );
 
-    // Login exitoso
     res.status(200).json({
       mensaje: 'Inicio de sesión exitoso',
       token,
     });
   } catch (error) {
-    next(error); // Pasar el error al middleware de manejo de errores
+    next(error);
   }
 });
 
-
-import { verificarToken } from '../middlewares/middlewares.js';
-
 // Ruta protegida para obtener el perfil del usuario
-router.get('/perfil', verificarToken, async (req, res) => {
+router.get('/perfil', async (req, res) => {
   try {
-    const usuario = await Usuario.findById(req.user.id).select('-password'); // Excluir contraseña
+    const usuario = await Usuario.findById(req.user.id).select('-password');
     if (!usuario) {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
@@ -112,6 +125,5 @@ router.get('/perfil', verificarToken, async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener el perfil del usuario' });
   }
 });
-
 
 export default router;

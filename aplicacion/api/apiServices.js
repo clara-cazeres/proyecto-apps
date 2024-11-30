@@ -1,0 +1,45 @@
+const API_BASE_URL = 'http://192.168.1.10:3001';
+
+export const registrarUsuario = async (formData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/usuarios/registro`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.mensaje || 'Error al registrar usuario');
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const iniciarSesion = async (credentials) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/usuarios/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.mensaje || 'Error al iniciar sesión');
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
