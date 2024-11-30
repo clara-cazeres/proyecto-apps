@@ -5,10 +5,24 @@ import Usuario from '../models/Usuario.js';
 
 const router = express.Router();
 
+
+//get usuarios 
+
+router.get('/', async (req, res) => {
+  try {
+    const usuarios = await Usuario.find(); // Obtiene todos los usuarios
+    res.status(200).json(usuarios); // Devuelve los usuarios como JSON
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al obtener los usuarios', error: error.message });
+  }
+});
+
+
+// Registro de usuario
 // Registro de usuario
 router.post('/registro', async (req, res, next) => {
   try {
-    const { username, email, password, ...otrosDatos } = req.body;
+    const { username, email, password, name = '', birthDate } = req.body;
 
     // Verificar si el usuario o email ya existen
     const usuarioExistente = await Usuario.findOne({ $or: [{ username }, { email }] });
@@ -19,20 +33,35 @@ router.post('/registro', async (req, res, next) => {
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear el nuevo usuario
+    // Crear el nuevo usuario con todos los campos inicializados
     const nuevoUsuario = new Usuario({
+      name,
       username,
       email,
       password: hashedPassword,
-      ...otrosDatos,
+      birthDate,
+      gender: '',
+      city: '',
+      country: '',
+      height: 0,
+      weight: 0,
+      vo2max: 0,
+      boatType: '',
+      boatName: '',
+      aboutMe: '',
+      courseLevel: '',
+      completedClasses: [],
     });
 
     await nuevoUsuario.save();
-    res.status(201).json({ mensaje: 'Usuario registrado exitosamente' });
+    res.status(201).json({ mensaje: 'Usuario registrado exitosamente', usuario: nuevoUsuario });
   } catch (error) {
     next(error); // Pasar el error al middleware de manejo de errores
   }
 });
+
+
+
 
 // Login de usuario
 router.post('/login', async (req, res, next) => {

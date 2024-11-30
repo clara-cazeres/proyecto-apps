@@ -1,37 +1,37 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { BottomNavigation } from 'react-native-paper';
 
 const BottomNavbar = ({ navigation }) => {
   const [index, setIndex] = useState(0);
 
   const routes = [
-    { key: 'Home', title: 'Inicio', icon: 'home' },
-    { key: 'Cursos', title: 'Cursos', icon: 'book' },
-    { key: 'Comunidad', title: 'Comunidad', icon: 'account-group' },
-    { key: 'Perfil', title: 'Perfil', icon: 'account' },
+    { key: 'home', title: 'Inicio', icon: 'home' },
+    { key: 'cursos', title: 'Cursos', icon: 'book' },
+    { key: 'comunidad', title: 'Comunidad', icon: 'account-group' },
+    { key: 'perfil', title: 'Mi Perfil', icon: 'account' },
   ];
 
   const handleIndexChange = (newIndex) => {
     setIndex(newIndex);
-    navigation.navigate(routes[newIndex].key);
+    const routeName = routes[newIndex].key;
+    navigation.navigate(routeName);
   };
+
+  const renderScene = BottomNavigation.SceneMap({
+    home: () => null,
+    cursos: () => null,
+    comunidad: () => null,
+    perfil: () => null,
+  });
 
   return (
     <BottomNavigation
       navigationState={{ index, routes }}
       onIndexChange={handleIndexChange}
-      renderScene={() => null}
-      barStyle={styles.barStyle}
+      renderScene={renderScene}
+      barStyle={{ backgroundColor: '#FFFFFF' }}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  barStyle: {
-    backgroundColor: '#FFFFFF',
-    elevation: 5,
-  },
-});
 
 export default BottomNavbar;

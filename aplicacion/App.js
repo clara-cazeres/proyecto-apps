@@ -6,6 +6,9 @@ import HomeScreen from './screens/HomeScreen';
 import CursosScreen from './screens/CursosScreen';
 import ComunidadScreen from './screens/ComunidadScreen';
 import PerfilScreen from './screens/PerfilScreen';
+import LoginScreen from './screens/auth/LoginScreen';
+import RegistroScreen from './screens/auth/RegistroScreen';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -17,6 +20,10 @@ export default function App() {
         <Drawer.Screen name="Cursos" component={CursosScreen} />
         <Drawer.Screen name="Comunidad" component={ComunidadScreen} />
         <Drawer.Screen name="Perfil" component={PerfilScreen} />
+
+        <Drawer.Screen name="Login" component={LoginScreen} />
+        <Drawer.Screen name="Registro" component={RegistroScreen} />
+
       </Drawer.Navigator>
     </NavigationContainer>
   );

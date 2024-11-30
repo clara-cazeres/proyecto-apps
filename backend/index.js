@@ -9,7 +9,14 @@ const port = process.env.PORT || 3001;
 // aplicar middlewares generales
 applyMiddlewares(app);
 
-// rutas
+
+// ruta raiz
+app.get('/', (req, res) => {
+  res.status(200).send('Bienvenido al backend de la app de clases de vela.');
+});
+
+
+//rutas
 app.use('/usuarios', usuarioRoutes);
 
 // Middleware para manejar errores
