@@ -1,41 +1,73 @@
-import React, { useState } from 'react';
-import { BottomNavigation } from 'react-native-paper';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'; // Importar íconos de Material Design
+import { useNavigationState, useNavigation } from '@react-navigation/native';
 
-const BottomNavbar = ({ navigation }) => {
-  const [index, setIndex] = useState(0);
+const BottomNavbar = () => {
+  const navigation = useNavigation();
 
-  const routes = [
-    { key: 'Home', title: 'Inicio', icon: 'home' },
-    { key: 'Cursos', title: 'Cursos', icon: 'book' },
-    { key: 'Comunidad', title: 'Comunidad', icon: 'account-group' },
-    { key: 'Perfil', title: 'Mi Perfil', icon: 'account' },
+  // Obtener el índice actual de la navegación
+  const currentRouteName = useNavigationState((state) => state.routes[state.index]?.name);
+
+  const tabs = [
+    { key: 'Home', title: 'Inicio', icon: 'home-filled' },
+    { key: 'Cursos', title: 'Cursos', icon: 'bookmark' },
+    { key: 'Comunidad', title: 'Comunidad', icon: 'group' },
+    { key: 'Perfil', title: 'Mi Perfil', icon: 'person' },
   ];
 
-  const handleIndexChange = (newIndex) => {
-    setIndex(newIndex);
-    const routeName = routes[newIndex].key;
+  const handlePress = (tab) => {
     if (navigation && navigation.navigate) {
-      navigation.navigate(routeName);
-    } else {
-      console.error('El objeto navigation no está definido.');
+      navigation.navigate(tab.key); // Navegar a la ruta seleccionada
     }
   };
 
-  const renderScene = BottomNavigation.SceneMap({
-    Home: () => null,
-    Cursos: () => null,
-    Comunidad: () => null,
-    Perfil: () => null,
-  });
-
   return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={handleIndexChange}
-      renderScene={renderScene}
-      barStyle={{ backgroundColor: '#FFFFFF' }}
-    />
+    <View style={styles.navbar}>
+      {tabs.map((tab) => (
+        <TouchableOpacity
+          key={tab.key}
+          style={styles.tab}
+          onPress={() => handlePress(tab)}
+        >
+          <MaterialIcons
+            name={tab.icon}
+            size={24}
+            color={currentRouteName === tab.key ? '#00214E' : '#888'}
+          />
+          <Text
+            style={[
+              styles.tabText,
+              currentRouteName === tab.key && styles.activeTabText,
+            ]}
+          >
+            {tab.title}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+  },
+  tab: {
+    alignItems: 'center',
+  },
+  tabText: {
+    fontSize: 12,
+    color: '#888',
+  },
+  activeTabText: {
+    color: '#00214E',
+  },
+});
 
 export default BottomNavbar;

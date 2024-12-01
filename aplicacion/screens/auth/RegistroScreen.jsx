@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../redux/authSlice';
 
 const RegistroScreen = ({ navigation }) => {
+  const dispatch = useDispatch(); // Inicializa el dispatch aquí
+
   const [formData, setFormData] = useState({
     name: '',
     username: '',

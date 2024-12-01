@@ -71,19 +71,19 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     paddingHorizontal: 15,
-    marginVertical: 10,
+    marginVertical: 20,
   },
   searchInput: {
     height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
+    borderWidth: 0,
+    borderRadius: 40,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#E4E4E4',
+    fontWeight: 'light',
   },
   list: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: 15,
+    paddingBottom: 15,
   },
 });
 
