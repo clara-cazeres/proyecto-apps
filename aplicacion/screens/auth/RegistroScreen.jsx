@@ -46,7 +46,7 @@ const RegistroScreen = ({ navigation }) => {
         dispatch(login({ token, user }));
   
         Alert.alert('Éxito', 'Registro exitoso. Redirigiendo al inicio...');
-        navigation.navigate('Home'); // Redirige a la pantalla principal
+        navigation.navigate('CuestionarioPrompt'); // redirige al cuestionario
       } else {
         Alert.alert('Error', 'No se recibió un token');
       }

@@ -3,6 +3,7 @@ import { conectarDB } from './database/connection.js';
 import { applyMiddlewares, manejarErrores } from './middlewares/middlewares.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import moduleRoutes from './routes/moduleRoutes.js';
+import cuestionarioRoutes from './routes/cuestionarioRoutes.js'
 import dotenv from 'dotenv';
 
 
@@ -26,6 +27,8 @@ app.use('/usuarios', usuarioRoutes);
 
 app.use('/modules', moduleRoutes);
 
+app.use('/cuestionarios', cuestionarioRoutes);
+
 // Middleware para manejar errores
 app.use(manejarErrores);
 
@@ -34,7 +37,7 @@ const iniciarServidor = async () => {
   try {
     await conectarDB();
     app.listen(port, () => {
-      console.log(`Servidor corriendo en http://192.168.1.10:${port}`);
+      console.log(`Servidor corriendo en http://localhost:${port}`);
     });
   } catch (error) {
     console.error('Error al iniciar el servidor:', error.message);

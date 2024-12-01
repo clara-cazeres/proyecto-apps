@@ -6,9 +6,13 @@ import HomeScreen from '../screens/HomeScreen';
 import CursosScreen from '../screens/CursosScreen';
 import ComunidadScreen from '../screens/ComunidadScreen';
 import PerfilScreen from '../screens/PerfilScreen';
+
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegistroScreen from '../screens/auth/RegistroScreen';
 import LogoutScreen from '../screens/auth/LogoutScreen';
+
+import CuestionarioInicialPrompt from '../screens/auth/CuestionarioInicialPrompt';
+import CuestionarioInicialScreen from '../screens/auth/CuestionarioInicialScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -22,20 +26,30 @@ const MainNavigator = () => {
       <Drawer.Screen name="Comunidad" component={ComunidadScreen} />
       <Drawer.Screen name="Perfil" component={PerfilScreen} />
 
+      <Drawer.Screen name="CuestionarioPrompt" component={CuestionarioInicialPrompt} />
+      <Drawer.Screen name="Cuestionario" component={CuestionarioInicialScreen} /> 
+
       {!isAuthenticated ? (
         <>
           <Drawer.Screen name="Login" component={LoginScreen} />
           <Drawer.Screen name="Registro" component={RegistroScreen} />
         </>
       ) : (
+        
         <Drawer.Screen
           name="Cerrar Sesión"
           component={LogoutScreen} // Usar el nuevo componente aquí
           options={{ drawerLabel: 'Cerrar Sesión' }}
         />
+      
       )}
     </Drawer.Navigator>
   );
 };
 
 export default MainNavigator;
+
+
+//los screen del cuestionario se muestran siempre - hay q cambiarlo
+//editar estilos
+//donde se guarda la info del cuestionario?

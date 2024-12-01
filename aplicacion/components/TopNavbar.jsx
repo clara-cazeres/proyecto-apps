@@ -1,22 +1,14 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { Appbar } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native'; // Importar el hook de navegación
 
-const TopNavbar = ({ navigation, title }) => {
+const TopNavbar = ({ title }) => {
+  const navigation = useNavigation(); // Usar el hook para obtener el objeto de navegación
+
   return (
     <Appbar.Header style={styles.appbar}>
-      {/* Verifica que `navigation` esté definido antes de usarlo */}
-      <Appbar.Action
-        icon="menu"
-        color="#FFFFFF"
-        onPress={() => {
-          if (navigation && navigation.openDrawer) {
-            navigation.openDrawer();
-          } else {
-            console.error('El objeto navigation no está definido.');
-          }
-        }}
-      />
+      <Appbar.Action icon="menu" color="#FFFFFF" onPress={() => navigation.openDrawer()} />
       {title === 'Inicio' ? (
         <Image source={require('../assets/logotipo-sa.png')} style={styles.logo} />
       ) : (
