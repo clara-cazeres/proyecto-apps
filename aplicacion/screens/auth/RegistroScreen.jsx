@@ -31,22 +31,22 @@ const RegistroScreen = ({ navigation }) => {
       Alert.alert('Error', 'Por favor, ingresa una fecha válida (YYYY-MM-DD)');
       return;
     }
-  
+
     console.log('Datos enviados al backend:', formData);
-  
+
     try {
       const data = await registrarUsuario(formData); // Llama al servicio de registro
       console.log('Respuesta recibida del backend:', data);
-  
+
       const { token, user } = data;
       if (token) {
         console.log('Token recibido:', token);
-  
+
         // Despacha la acción de login
         dispatch(login({ token, user }));
-  
-        Alert.alert('Éxito', 'Registro exitoso. Redirigiendo al inicio...');
-        navigation.navigate('CuestionarioPrompt'); // redirige al cuestionario
+
+        Alert.alert('Éxito', 'Registro exitoso.');
+        navigation.navigate('CuestionarioFlow', { screen: 'CuestionarioPrompt' });
       } else {
         Alert.alert('Error', 'No se recibió un token');
       }
@@ -55,7 +55,6 @@ const RegistroScreen = ({ navigation }) => {
       Alert.alert('Error', error.message || 'No se pudo completar el registro');
     }
   };
-  
 
   return (
     <ScrollView style={authStyles.container}>

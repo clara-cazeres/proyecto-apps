@@ -1,5 +1,6 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 
 import HomeScreen from '../screens/HomeScreen';
@@ -15,6 +16,14 @@ import CuestionarioInicialPrompt from '../screens/auth/CuestionarioInicialPrompt
 import CuestionarioInicialScreen from '../screens/auth/CuestionarioInicialScreen';
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+
+const CuestionarioStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="CuestionarioPrompt" component={CuestionarioInicialPrompt} />
+    <Stack.Screen name="Cuestionario" component={CuestionarioInicialScreen} />
+  </Stack.Navigator>
+);
 
 const MainNavigator = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -26,30 +35,29 @@ const MainNavigator = () => {
       <Drawer.Screen name="Comunidad" component={ComunidadScreen} />
       <Drawer.Screen name="Perfil" component={PerfilScreen} />
 
-      <Drawer.Screen name="CuestionarioPrompt" component={CuestionarioInicialPrompt} />
-      <Drawer.Screen name="Cuestionario" component={CuestionarioInicialScreen} /> 
-
       {!isAuthenticated ? (
         <>
           <Drawer.Screen name="Login" component={LoginScreen} />
           <Drawer.Screen name="Registro" component={RegistroScreen} />
         </>
       ) : (
-        
         <Drawer.Screen
           name="Cerrar Sesión"
-          component={LogoutScreen} // Usar el nuevo componente aquí
+          component={LogoutScreen}
           options={{ drawerLabel: 'Cerrar Sesión' }}
         />
-      
       )}
     </Drawer.Navigator>
   );
 };
 
-export default MainNavigator;
-
-
-//los screen del cuestionario se muestran siempre - hay q cambiarlo
-//editar estilos
-//donde se guarda la info del cuestionario?
+export default function AppNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* Drawer menu */}
+      <Stack.Screen name="MainDrawer" component={MainNavigator} />
+      {/* Cuestionario stack */}
+      <Stack.Screen name="CuestionarioFlow" component={CuestionarioStack} />
+    </Stack.Navigator>
+  );
+}
