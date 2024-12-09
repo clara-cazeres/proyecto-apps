@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, FlatList, StyleSheet } from 'react-native';
+import {View, TextInput, FlatList, StyleSheet } from 'react-native';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import ModuleCard from '../components/ModuleCard';
@@ -12,7 +12,7 @@ const CursosScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const response = await fetch('http://192.168.1.10:3001/modules');
+        const response = await fetch('http://localhost:3001/modules');
         const data = await response.json();
         setModules(data);
         setFilteredModules(data);
@@ -39,9 +39,8 @@ const CursosScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Asegúrate de pasar `navigation` a TopNavbar */}
+   
       <TopNavbar title="CURSO" navigation={navigation} />
-
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -50,15 +49,27 @@ const CursosScreen = ({ navigation }) => {
           onChangeText={handleSearch}
         />
       </View>
-
       <FlatList
         data={filteredModules}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <ModuleCard module={item} />}
+        renderItem={({ item, index }) => (
+          <ModuleCard
+            module={item}
+            moduleNumber={index + 1} // Calcula el número del módulo correctamente
+            onPress={() =>
+              navigation.navigate('Module', {
+                moduleId: item._id,
+                moduleNumber: index + 1, // También pásalo al navegar a ModuleScreen
+              })
+            }
+            showExtraInfo={true}
+          />
+        )}
         contentContainerStyle={styles.list}
       />
 
-      {/* Pasa el objeto navigation */}
+
+
       <BottomNavbar navigation={navigation} />
     </View>
   );

@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import globalStyles from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
   const [module, setModule] = useState(null);
+  const [moduleNumber, setModuleNumber] = useState(null);
 
   useEffect(() => {
     const fetchModule = async () => {
       try {
-        const response = await fetch('http://192.168.1.10:3001/modules');
+        const response = await fetch('http://localhost:3001/modules');
         const data = await response.json();
         if (data.length > 0) {
           setModule(data[0]); // Muestra el primer módulo.
+          setModuleNumber(1);
         }
       } catch (error) {
         console.error('Error al cargar el módulo:', error);
@@ -29,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
       <TopNavbar title="SAIL ACADEMY" />
 
       {/* Contenido central */}
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Text style={[globalStyles.title, styles.welcomeTitle]}>
           ¡BIENVENIDO!
         </Text>
@@ -38,19 +40,23 @@ const HomeScreen = ({ navigation }) => {
         {/* Tarjeta del módulo destacado */}
         {module ? (
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{module.title.toUpperCase()}</Text>
-            <Text style={styles.cardDescription}>{module.description}</Text>
-            <Text style={styles.cardInfo}>
-              {module.lessons.length} clase
-              {module.lessons.length > 1 ? 's' : ''} -{' '}
-              {module.lessons.reduce((total, lesson) => total + lesson.time, 0)}{' '}
-              minutos
-            </Text>
+            <Image
+              source={{ uri: module.img }}
+              style={styles.cardImage}
+              resizeMode="cover"
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.cardTitle}>{module.title.toUpperCase()}</Text>
+              <Text style={styles.cardInfo}>
+                MODULO {moduleNumber} - {module.lessons.length} clase
+                {module.lessons.length > 1 ? 's' : ''}
+              </Text>
+            </View>
           </View>
         ) : (
           <Text style={styles.noModule}>No hay módulos disponibles</Text>
         )}
-      </View>
+      </ScrollView>
 
       {/* Bottom Navbar */}
       <BottomNavbar navigation={navigation} />
@@ -60,12 +66,12 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   content: {
-    ...globalStyles.content,
-    alignItems: 'flex-start', // Ajuste específico para esta pantalla
-    justifyContent: 'flex-start', // Ajuste específico para esta pantalla
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    padding: 20, // Agregado para separar los elementos dentro del ScrollView
   },
   welcomeTitle: {
-    color: '#000', // Personalización adicional
+    color: '#000',
     marginBottom: 5,
   },
   subtitle: {
@@ -76,8 +82,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 20,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -85,20 +90,24 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 20,
   },
+  cardImage: {
+    width: '100%',
+    height: 350,
+    borderRadius: 10,
+  },
+  textContainer: {
+    flex: 1,
+    padding: 14,
+  },
   cardTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#00214E',
     marginBottom: 10,
   },
-  cardDescription: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 10,
-  },
   cardInfo: {
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '300',
     color: '#444',
   },
   noModule: {

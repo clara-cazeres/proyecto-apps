@@ -10,7 +10,7 @@ const CuestionarioInicialScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchCuestionario = async () => {
       try {
-        const response = await fetch('http://192.168.1.10:3001/cuestionarios'); // Cambia esta URL según corresponda
+        const response = await fetch('http://localhost:3001/cuestionarios'); // Cambia esta URL según corresponda
         const data = await response.json();
         const inicialCuestionario = data.find((q) => q.title === 'Cuestionario inicial'); // Encuentra el cuestionario inicial
         setCuestionario(inicialCuestionario);
