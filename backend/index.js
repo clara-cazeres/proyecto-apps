@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
+
 import { conectarDB } from './database/connection.js';
 import { applyMiddlewares, manejarErrores } from './middlewares/middlewares.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
@@ -16,7 +17,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: 'http://localhost:8081', 
+    origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, 
   })
@@ -31,6 +32,15 @@ app.get('/', (req, res) => {
   res.status(200).send('Bienvenido al backend de la app de clases de vela.');
 });
 
+app.use((req, res, next) => {
+  console.log(`Método: ${req.method}, URL: ${req.url}`);
+  next();
+});
+
+
+app.get('/usuarios/prueba', (req, res) => {
+  res.status(200).json({ mensaje: 'Ruta de prueba directa funcionando' });
+});
 
 //rutas
 app.use('/usuarios', usuarioRoutes);

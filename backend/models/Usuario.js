@@ -19,7 +19,6 @@ const usuarioSchema = new mongoose.Schema({
   completedClasses: { type: [String], default: [] }, 
 });
 
-// Crear el modelo de Mongoose
 const Usuario = mongoose.model('Usuario', usuarioSchema);
 
 export default Usuario;

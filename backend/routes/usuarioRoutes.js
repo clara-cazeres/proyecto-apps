@@ -2,6 +2,10 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Usuario from '../models/Usuario.js';
+import mongoose from 'mongoose';
+
+// import { verificarToken } from '../middlewares/middlewares.js';
+
 
 const router = express.Router();
 
@@ -64,12 +68,8 @@ router.post('/registro', async (req, res, next) => {
     );
     console.log('Token generado:', token);
 
+
     res.status(201).json({
-      mensaje: 'Usuario registrado exitosamente',
-      usuario: nuevoUsuario,
-      token,
-    });
-    console.log('Respuesta enviada:', {
       mensaje: 'Usuario registrado exitosamente',
       usuario: nuevoUsuario,
       token,
@@ -107,23 +107,50 @@ router.post('/login', async (req, res, next) => {
     res.status(200).json({
       mensaje: 'Inicio de sesión exitoso',
       token,
+      user: {
+        id: usuario._id,
+        name: usuario.name,
+        email: usuario.email,
+        birthDate: usuario.birthDate,
+        city: usuario.city,
+        country: usuario.country,
+        boatType: usuario.boatType,
+        // Agrega más campos según sea necesario
+      },
     });
   } catch (error) {
     next(error);
   }
 });
 
-// Ruta protegida para obtener el perfil del usuario
-router.get('/perfil', async (req, res) => {
+// Obtener perfil de un usuario por ID
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  // Valida si el ID es un ObjectId válido
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.log('ID inválido:', id);
+    return res.status(400).json({ mensaje: 'ID inválido' });
+  }
+
   try {
-    const usuario = await Usuario.findById(req.user.id).select('-password');
+    console.log('Ruta /usuarios/:id llamada con ID:', id);
+    const usuario = await Usuario.findById(id).select('-password');
     if (!usuario) {
+      console.log('Usuario no encontrado para ID:', id);
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
     res.status(200).json(usuario);
   } catch (error) {
-    res.status(500).json({ mensaje: 'Error al obtener el perfil del usuario' });
+    console.error('Error al obtener el perfil:', error.message);
+    res.status(500).json({ mensaje: 'Error al obtener el perfil del usuario', error: error.message });
   }
+});
+
+
+router.get('/prueba', (req, res) => {
+  res.status(200).json({ mensaje: 'Ruta de prueba funcionando' });
 });
 
 export default router;

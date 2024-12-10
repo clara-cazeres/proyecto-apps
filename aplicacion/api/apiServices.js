@@ -43,3 +43,19 @@ export const iniciarSesion = async (credentials) => {
     throw error;
   }
 };
+
+export const obtenerPerfilPorId = async (id, token) => {
+  const response = await fetch(`${API_BASE_URL}/usuarios/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el perfil del usuario');
+  }
+
+  return await response.json();
+};
