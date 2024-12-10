@@ -1,4 +1,6 @@
 import express from 'express';
+import cors from 'cors';
+
 import { conectarDB } from './database/connection.js';
 import { applyMiddlewares, manejarErrores } from './middlewares/middlewares.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
@@ -11,6 +13,14 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 dotenv.config();
+
+app.use(
+  cors({
+    origin: 'http://localhost:8081', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true, 
+  })
+);
 
 // aplicar middlewares generales
 applyMiddlewares(app);
@@ -37,7 +47,7 @@ const iniciarServidor = async () => {
   try {
     await conectarDB();
     app.listen(port, () => {
-      console.log(`Servidor corriendo en http://localhost:${port}`);
+      console.log(`Servidor corriendo en https://proyecto-apps.onrender.com/`);
     });
   } catch (error) {
     console.error('Error al iniciar el servidor:', error.message);

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchCuestionario = createAsyncThunk('cuestionarios/fetchCuestionario', async (id) => {
-  const response = await fetch(`http://localhost:3001/cuestionarios/${id}`);
+  const response = await fetch(`https://proyecto-apps.onrender.com/cuestionarios/${id}`);
   return response.json();
 });
 

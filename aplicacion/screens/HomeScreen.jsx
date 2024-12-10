@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchModule = async () => {
       try {
-        const response = await fetch('http://localhost:3001/modules');
+        const response = await fetch('https://proyecto-apps.onrender.com/modules');
         const data = await response.json();
         if (data.length > 0) {
           setModule(data[0]); // Muestra el primer módulo.

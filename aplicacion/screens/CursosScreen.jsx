@@ -12,7 +12,7 @@ const CursosScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const response = await fetch('http://localhost:3001/modules');
+        const response = await fetch('https://proyecto-apps.onrender.com/modules');
         const data = await response.json();
         setModules(data);
         setFilteredModules(data);

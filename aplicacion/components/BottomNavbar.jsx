@@ -51,6 +51,9 @@ const BottomNavbar = () => {
 
 const styles = StyleSheet.create({
   navbar: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 10,

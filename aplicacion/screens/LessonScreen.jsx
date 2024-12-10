@@ -1,43 +1,45 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Image, Linking } from 'react-native';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
+import Button from '../components/Button';
 
 const LessonScreen = ({ route, navigation }) => {
   const { lesson, moduleNumber } = route.params;
 
   return (
     <View style={styles.container}>
-      {/* Navbar con flecha */}
       <TopNavbar
         title={`MÓDULO ${moduleNumber} - CLASE ${lesson.lessonNumber}`}
         navigation={navigation}
-        showBackButton={true} 
-        />
+        showBackButton
+      />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Video */}
+        <View style={styles.videoContainer}>
+          <Image source={{ uri: lesson.img || 'https://via.placeholder.com/600x300' }} style={styles.video} />
+          <Text style={styles.playButton}>▶</Text>
+        </View>
 
+        {/* Contenido */}
+        <Text style={styles.title}>{lesson.title.toUpperCase()}</Text>
+        <Text style={styles.subtitle}>Resumen de la clase</Text>
+        <Text style={styles.summary}>{lesson.summary}</Text>
 
-      {/* Video */}
-      <View style={styles.videoContainer}>
-        <Image source={{ uri: lesson.img || 'https://via.placeholder.com/600x300' }} style={styles.video} />
-        <Text style={styles.playButton}>▶</Text>
-      </View>
-
-      {/* Contenido */}
-      <Text style={styles.title}>{lesson.title.toUpperCase()}</Text>
-      <Text style={styles.subtitle}>Resumen de la clase</Text>
-      <Text style={styles.summary}>{lesson.summary}</Text>
-
-      {/* Botones */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => Linking.openURL('https://example.com/download.pdf')}>
-          <Text style={styles.buttonText}>DESCARGAR PDF</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.finalizeButton]} onPress={() => alert('Clase finalizada!')}>
-          <Text style={styles.buttonText}>FINALIZAR CLASE</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Bottom Navbar */}
+        {/* Botones */}
+        <View style={styles.buttonContainer}>
+          <Button
+            iconName="file-download" // Ícono de descarga
+            onPress={() => Linking.openURL('https://example.com/download.pdf')}
+            variant="outlined"
+          />
+          <Button
+            title="FINALIZAR CLASE"
+            onPress={() => alert('Clase finalizada!')}
+            variant="filled"
+          />
+        </View>
+      </ScrollView>
       <BottomNavbar navigation={navigation} activeTab="Cursos" />
     </View>
   );
@@ -46,7 +48,12 @@ const LessonScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    zIndex:99,
     backgroundColor: '#f9f9f9',
+  },
+  scrollContent: {
+    paddingHorizontal: 15,
+    paddingBottom: 80, 
   },
   videoContainer: {
     position: 'relative',
@@ -87,22 +94,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
-  },
-  button: {
-    flex: 1,
-    backgroundColor: '#00214E',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  finalizeButton: {
-    backgroundColor: '#28A745',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 

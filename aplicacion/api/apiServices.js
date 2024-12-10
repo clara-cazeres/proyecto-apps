@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001';
+import API_BASE_URL from "./apiConfig";
 
 export const registrarUsuario = async (formData) => {
   try {
