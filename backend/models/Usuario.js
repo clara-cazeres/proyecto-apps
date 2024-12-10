@@ -7,6 +7,7 @@ const usuarioSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   birthDate: { type: Date, required: true },
   gender: { type: String, required: false, default: ''  },
+  userImg: { type: String, required: false, default: ''},
   city: { type: String, required: false, default: ''  },
   country: { type: String, required: false, default: ''  },
   height: { type: Number, required: false, default: 0  },
