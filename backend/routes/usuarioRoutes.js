@@ -4,8 +4,7 @@ import jwt from 'jsonwebtoken';
 import Usuario from '../models/Usuario.js';
 import mongoose from 'mongoose';
 
-// import { verificarToken } from '../middlewares/middlewares.js';
-
+import { verificarToken } from '../middlewares/middlewares.js';
 
 const router = express.Router();
 
