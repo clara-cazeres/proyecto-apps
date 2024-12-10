@@ -125,10 +125,11 @@ router.post('/login', async (req, res, next) => {
 
 // Obtener perfil de un usuario por ID
 
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
+router.get('/:id', verificarToken, async (req, res) => {
+  const { id } = req.user; // Utiliza el ID del usuario decodificado del token
+  console.log('Usuario autenticado con ID:', id);
 
-  // Valida si el ID es un ObjectId válido
+  // Verifica si el ID es un ObjectId válido
   if (!mongoose.Types.ObjectId.isValid(id)) {
     console.log('ID inválido:', id);
     return res.status(400).json({ mensaje: 'ID inválido' });
@@ -148,9 +149,5 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-
-router.get('/prueba', (req, res) => {
-  res.status(200).json({ mensaje: 'Ruta de prueba funcionando' });
-});
 
 export default router;

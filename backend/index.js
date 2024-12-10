@@ -38,10 +38,6 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/usuarios/prueba', (req, res) => {
-  res.status(200).json({ mensaje: 'Ruta de prueba directa funcionando' });
-});
-
 //rutas
 app.use('/usuarios', usuarioRoutes);
 
