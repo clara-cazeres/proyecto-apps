@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { MaterialIcons, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
@@ -96,21 +97,51 @@ const PerfilScreen = ({ navigation }) => {
 
         {/* Información del usuario */}
         <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>📍 {perfil.city}, {perfil.country}</Text>
-          <Text style={styles.infoText}>👤 {calculateAge(perfil.birthDate)} años</Text>
-          <Text style={styles.infoText}>⛵ Navego en: {perfil.boatType || 'No especificado'}</Text>
-          <Text style={styles.infoText}>📘 Nivel de curso: {perfil.courseLevel || 'No especificado'}</Text>
+          {perfil.city && perfil.country && (
+            <View style={styles.infoRow}>
+              <MaterialIcons name="location-on" size={22} color="#333" />
+              <Text style={styles.infoText}>{perfil.city}, {perfil.country}</Text>
+            </View>
+          )}
+          {perfil.birthDate && (
+            <View style={styles.infoRow}>
+              <FontAwesome5 name="user-alt" size={18} color="black" />
+              <Text style={styles.infoText}>{calculateAge(perfil.birthDate)} años</Text>
+            </View>
+          )}
+          {perfil.boatType && (
+            <View style={styles.infoRow}>
+             
+              <MaterialCommunityIcons name="sail-boat" size={20} color="black" />
+              <Text style={styles.infoText}>Navego en: {perfil.boatType}</Text>
+            </View>
+          )}
+          {perfil.courseLevel && (
+            <View style={styles.infoRow}>
+              <Entypo name="book" size={20} color="#333" />
+              <Text style={styles.infoText}>Nivel de curso: {perfil.courseLevel}</Text>
+            </View>
+          )}
         </View>
 
         {/* Mis Datos */}
         <View style={styles.dataContainer}>
           <Text style={styles.sectionTitle}>Mis datos</Text>
           <View style={styles.dataBoxesContainer}>
-            <View style={styles.dataBox}><Text style={styles.dataBoxText}>Peso</Text></View>
-            <View style={styles.dataBox}><Text style={styles.dataBoxText}>Estatura</Text></View>
-            <View style={styles.dataBox}><Text style={styles.dataBoxText}>VO2 Max</Text></View>
+            <View style={styles.dataBox}>
+              <Text style={styles.dataBoxText}>Peso</Text>
+              <Text style={styles.dataBoxValue}>{perfil.weight || 'N/A'} Kg</Text>
+            </View>
+            <View style={styles.dataBox}>
+              <Text style={styles.dataBoxText}>Estatura</Text>
+              <Text style={styles.dataBoxValue}>{perfil.height ? `${(perfil.height / 100).toFixed(2)} m` : 'N/A'}</Text>
+            </View>
+            <View style={styles.dataBox}>
+              <Text style={styles.dataBoxText}>VO2 Max</Text>
+              <Text style={styles.dataBoxValue}>{perfil.vo2max || 'N/A'} ml/kg/min</Text>
+            </View>
           </View>
-          <Button title="Registrar Nuevos Datos" onPress={() => alert('Registrar nuevos datos')} />
+          <Button title="EDITAR PERFIL" onPress={() => alert('Registrar nuevos datos')} />
         </View>
       </ScrollView>
       <BottomNavbar navigation={navigation} activeTab="Mi perfil" />
@@ -118,19 +149,21 @@ const PerfilScreen = ({ navigation }) => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
+    paddingBottom: 70,
   },
   headerContainer: {
-    backgroundColor: '#00214E',
+    backgroundColor: '#2A6295',
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: 20,
   },
   profileImageContainer: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     borderRadius: 60,
     overflow: 'hidden',
     backgroundColor: '#ccc',
@@ -153,24 +186,31 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   name: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: 'light',
+    textTransform: 'uppercase',
     color: '#fff',
     marginTop: 10,
   },
   infoContainer: {
     padding: 20,
   },
+  infoContainer: {
+    padding: 20,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   infoText: {
     fontSize: 16,
-    marginBottom: 10,
+    marginLeft: 10,
     color: '#333',
   },
   dataContainer: {
     padding: 20,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: '#f0f0f0',
   },
   sectionTitle: {
     fontSize: 18,
@@ -184,11 +224,16 @@ const styles = StyleSheet.create({
   },
   dataBox: {
     width: '30%',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   dataBoxText: {
     fontSize: 14,
