@@ -22,7 +22,7 @@ const PerfilScreen = ({ navigation }) => {
 
     const fetchUser = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/usuarios/${user.id}`, {
+        const response = await fetch(`${API_BASE_URL}/usuarios/${user._id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

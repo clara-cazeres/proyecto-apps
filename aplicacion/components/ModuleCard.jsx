@@ -1,28 +1,25 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Para mostrar el candado
 
-
-const ModuleCard = ({ module, moduleNumber, onPress, showExtraInfo = true }) => (
-  <TouchableOpacity onPress={onPress} style={styles.card}>
+const ModuleCard = ({ module, moduleNumber, onPress, isLocked = false }) => (
+  <TouchableOpacity 
+    onPress={isLocked ? null : onPress} 
+    style={[styles.card, isLocked && styles.cardLocked]}
+  >
     <Image source={{ uri: module.img }} style={styles.image} />
+    {isLocked && (
+      <View style={styles.overlay}>
+        <Icon name="lock" size={30} color="#FFF" />
+      </View>
+    )}
     <View style={styles.textContainer}>
-      {/* Muestra el número del módulo correctamente */}
-      {showExtraInfo && (
-        <Text style={styles.moduleNumber}>
-          MÓDULO {moduleNumber || 'N/A'}
-        </Text>
-      )}
+      {moduleNumber && <Text style={styles.moduleNumber}>MÓDULO {moduleNumber}</Text>}
       <Text style={styles.title}>{module.title}</Text>
       <Text style={styles.description}>{module.description}</Text>
-      {showExtraInfo && (
-        <Text style={styles.lessonsCount}>
-          {module.lessons?.length || 0} clases
-        </Text>
-      )}
     </View>
   </TouchableOpacity>
 );
-
 
 const styles = StyleSheet.create({
   card: {
@@ -34,12 +31,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     alignItems: 'flex-start',
+    position: 'relative',
+  },
+  cardLocked: {
+    opacity: 0.7,
   },
   image: {
     width: 100,
     height: 120,
     borderRadius: 10,
     marginRight: 10,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
   },
   textContainer: {
     flex: 1,
@@ -58,12 +70,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#555',
   },
-  lessonsCount: {
-    fontSize: 9,
-    color: '#888',
-    textAlign: 'right',
-  },
 });
-
 export default ModuleCard;
-

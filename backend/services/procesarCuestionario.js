@@ -5,17 +5,20 @@ const procesarCuestionario = async (respuestaCuestionario, usuarioId) => {
   try {
     let clasesDesbloqueadas = [];
 
-    // Verifica la respuesta específica "Navego hace..."
-    if (respuestaCuestionario === "entre 6 meses y 2 años" || respuestaCuestionario === "más de dos años") {
-      const nivelRequerido = "Básico";
+    // Interpreta el valor de 'Navego hace'
+    const nivelRequerido = 
+      respuestaCuestionario === '2' ? 'Básico' : // Entre 6 meses y 2 años
+      respuestaCuestionario === '3' ? 'Básico' : // Más de dos años
+      null;
 
-      // Busca los módulos con el nivel de curso "Básico"
-      const modulosBasicos = await Module.find({ courseLevel: nivelRequerido });
+    if (nivelRequerido) {
+      // Busca los módulos con el nivel de curso correspondiente
+      const modulos = await Module.find({ courseLevel: nivelRequerido });
 
-      // Recorre las lecciones de los módulos básicos para obtener las clases desbloqueadas
-      modulosBasicos.forEach((modulo) => {
+      // Recorre las lecciones para desbloquear clases
+      modulos.forEach((modulo) => {
         modulo.lessons.forEach((lesson) => {
-          clasesDesbloqueadas.push(lesson.id); // Agrega el campo `id` personalizado al array
+          clasesDesbloqueadas.push(lesson.id); // Usa `id` (no `_id`)
         });
       });
     }

@@ -148,5 +148,30 @@ router.get('/:id', verificarToken, async (req, res) => {
   }
 });
 
+router.post('/update-completed-classes', async (req, res) => {
+  const { userId, completedClassId } = req.body;
+  if (!userId || !completedClassId) {
+    return res.status(400).json({ mensaje: 'Datos insuficientes para actualizar las clases completadas' });
+  }
+
+  try {
+    const user = await Usuario.findById(userId);
+    if (!user) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    if (!user.completedClasses.includes(completedClassId)) {
+      user.completedClasses.push(completedClassId); // Solo agrega el ID actual
+      await user.save();
+    }
+
+    res.status(200).json({ mensaje: 'Clase actualizada correctamente', completedClasses: user.completedClasses });
+  } catch (error) {
+    console.error('Error al actualizar clases:', error);
+    res.status(500).json({ mensaje: 'Error del servidor' });
+  }
+});
+
+
 
 export default router;

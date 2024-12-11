@@ -1,7 +1,7 @@
 import express from 'express';
 import Cuestionario from '../models/Cuestionario.js';
 import procesarCuestionario from '../services/procesarCuestionario.js';
-
+import Usuario from '../models/Usuario.js';
 
 const router = express.Router();
 
@@ -42,23 +42,23 @@ router.get('/:id', async (req, res) => {
 router.post('/responder', async (req, res) => {
   try {
     const { userId, respuestas } = req.body;
-    console.log('Datos recibidos para procesar el cuestionario:', req.body);
-
 
     if (!userId || !respuestas) {
       return res.status(400).json({ mensaje: 'Faltan datos para procesar el cuestionario' });
     }
 
-    // Procesar la respuesta clave
-    const respuestaClave = respuestas['Navego hace']; // Cambiar el título según el cuestionario
-    if (!respuestaClave) {
-      
-      return res.status(400).json({ mensaje: 'Respuesta clave no proporcionada' });
-      
+    // Verifica si el usuario existe en la base de datos
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
 
-    // Actualizar las clases completadas del usuario
-    const clasesDesbloqueadas = await procesarCuestionario(respuestaClave, userId);
+    // Procesa las respuestas del cuestionario (puedes personalizar esta lógica)
+    console.log('Procesando cuestionario para el usuario:', userId);
+    console.log('Respuestas recibidas:', respuestas);
+
+    // Aquí puedes llamar a `procesarCuestionario` si es necesario
+    const clasesDesbloqueadas = await procesarCuestionario(respuestas['Navego hace'], userId);
 
     res.status(200).json({
       mensaje: 'Cuestionario procesado correctamente',
@@ -66,9 +66,10 @@ router.post('/responder', async (req, res) => {
     });
   } catch (error) {
     console.error('Error al procesar el cuestionario:', error.message);
-    res.status(500).json({ mensaje: 'Error al procesar el cuestionario' });
+    res.status(500).json({ mensaje: 'Error al procesar el cuestionario', error: error.message });
   }
 });
+
 
 
 

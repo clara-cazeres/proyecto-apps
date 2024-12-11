@@ -69,7 +69,8 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    padding: 20, // Agregado para separar los elementos dentro del ScrollView
+    padding: 20,
+    marginBottom: 70, 
   },
   welcomeTitle: {
     color: '#000',
