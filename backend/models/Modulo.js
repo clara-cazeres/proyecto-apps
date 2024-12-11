@@ -9,7 +9,6 @@ const lessonSchema = new mongoose.Schema({
   lessonNumber: { type: Number, required: true },
   level: { type: String, required: true },
   requiredClasses: { type: [String], default: [] },
-  requiredSurveys: { type: [String], default: [] },
   video: { type: String, required: false },
   time: { type: Number, required: true }, // en minutos
   summary: { type: String, required: false }, // puede ser un string o un array si es listado
