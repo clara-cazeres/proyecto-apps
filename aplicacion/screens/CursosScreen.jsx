@@ -3,6 +3,7 @@ import {View, TextInput, FlatList, StyleSheet } from 'react-native';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import ModuleCard from '../components/ModuleCard';
+import API_BASE_URL from '../api/apiConfig';
 
 const CursosScreen = ({ navigation }) => {
   const [modules, setModules] = useState([]);
@@ -12,7 +13,7 @@ const CursosScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const response = await fetch('https://proyecto-apps.onrender.com/modules');
+        const response = await fetch(`${API_BASE_URL}/modules`);
         const data = await response.json();
         setModules(data);
         setFilteredModules(data);

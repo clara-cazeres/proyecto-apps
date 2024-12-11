@@ -1,4 +1,3 @@
-// Función para procesar las respuestas del cuestionario y asignar clases desbloqueadas
 import Module from '../models/Modulo.js';
 import Usuario from '../models/Usuario.js';
 
@@ -15,18 +14,21 @@ const procesarCuestionario = async (respuestaCuestionario, usuarioId) => {
 
       // Recorre las lecciones de los módulos básicos para obtener las clases desbloqueadas
       modulosBasicos.forEach((modulo) => {
-        modulo.lessons.forEach((leccion) => {
-          clasesDesbloqueadas.push(leccion.id); // Agrega el ID de cada lección al array
+        modulo.lessons.forEach((lesson) => {
+          clasesDesbloqueadas.push(lesson.id); // Agrega el campo `id` personalizado al array
         });
       });
     }
 
     // Actualiza el usuario con las clases desbloqueadas
-    await Usuario.findByIdAndUpdate(usuarioId, {
-      $set: { completedClasses: clasesDesbloqueadas },
-    });
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(
+      usuarioId,
+      { $set: { completedClasses: clasesDesbloqueadas } },
+      { new: true } // Retorna el documento actualizado
+    );
 
     console.log(`Clases desbloqueadas para el usuario ${usuarioId}:`, clasesDesbloqueadas);
+    console.log("Usuario actualizado:", usuarioActualizado);
     return clasesDesbloqueadas;
   } catch (error) {
     console.error("Error al procesar el cuestionario:", error);

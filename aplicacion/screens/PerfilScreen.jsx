@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import Button from '../components/Button';
+import API_BASE_URL from '../api/apiConfig';
 
 const PerfilScreen = ({ navigation }) => {
   const { token, user } = useSelector((state) => state.auth);
@@ -21,7 +22,7 @@ const PerfilScreen = ({ navigation }) => {
 
     const fetchUser = async () => {
       try {
-        const response = await fetch(`https://proyecto-apps.onrender.com/usuarios/${user.id}`, {
+        const response = await fetch(`${API_BASE_URL}/usuarios/${user.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

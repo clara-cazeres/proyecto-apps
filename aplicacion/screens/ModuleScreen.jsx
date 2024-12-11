@@ -4,6 +4,7 @@ import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import ModuleCard from '../components/ModuleCard';
 import globalStyles from '../styles/styles';
+import API_BASE_URL from '../api/apiConfig';
 
 const ModuleScreen = ({ route, navigation }) => {
   const [module, setModule] = useState(null);
@@ -15,7 +16,7 @@ const ModuleScreen = ({ route, navigation }) => {
   useEffect(() => {
     const fetchModule = async () => {
       try {
-        const response = await fetch(`https://proyecto-apps.onrender.com/modules/${moduleId}`);
+        const response = await fetch(`${API_BASE_URL}/modules/${moduleId}`);
         const data = await response.json();
         setModule(data);
       } catch (error) {

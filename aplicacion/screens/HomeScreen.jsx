@@ -3,6 +3,7 @@ import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import globalStyles from '../styles/styles';
+import API_BASE_URL from '../api/apiConfig';
 
 const HomeScreen = ({ navigation }) => {
   const [module, setModule] = useState(null);
@@ -11,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchModule = async () => {
       try {
-        const response = await fetch('https://proyecto-apps.onrender.com/modules');
+        const response = await fetch(`${API_BASE_URL}/modules`);
         const data = await response.json();
         if (data.length > 0) {
           setModule(data[0]); // Muestra el primer módulo.

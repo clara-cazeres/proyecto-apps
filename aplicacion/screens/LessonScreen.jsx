@@ -1,5 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Text, StyleSheet, Image, Linking } from 'react-native';
+import Video from 'react-native-video';
+
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import Button from '../components/Button';
@@ -17,7 +19,12 @@ const LessonScreen = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Video */}
         <View style={styles.videoContainer}>
-          <Image source={{ uri: lesson.img || 'https://via.placeholder.com/600x300' }} style={styles.video} />
+        <Video
+      source={{ uri: lesson.video }}
+      style={styles.video}
+      controls={true}
+    />
+          
           <Text style={styles.playButton}>▶</Text>
         </View>
 

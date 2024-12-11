@@ -1,5 +1,7 @@
 import express from 'express';
 import Cuestionario from '../models/Cuestionario.js';
+import procesarCuestionario from '../services/procesarCuestionario.js';
+
 
 const router = express.Router();
 
@@ -37,4 +39,40 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.post('/responder', async (req, res) => {
+  try {
+    const { userId, respuestas } = req.body;
+    console.log('Datos recibidos para procesar el cuestionario:', req.body);
+
+
+    if (!userId || !respuestas) {
+      return res.status(400).json({ mensaje: 'Faltan datos para procesar el cuestionario' });
+    }
+
+    // Procesar la respuesta clave
+    const respuestaClave = respuestas['Navego hace']; // Cambiar el título según el cuestionario
+    if (!respuestaClave) {
+      
+      return res.status(400).json({ mensaje: 'Respuesta clave no proporcionada' });
+      
+    }
+
+    // Actualizar las clases completadas del usuario
+    const clasesDesbloqueadas = await procesarCuestionario(respuestaClave, userId);
+
+    res.status(200).json({
+      mensaje: 'Cuestionario procesado correctamente',
+      clasesDesbloqueadas,
+    });
+  } catch (error) {
+    console.error('Error al procesar el cuestionario:', error.message);
+    res.status(500).json({ mensaje: 'Error al procesar el cuestionario' });
+  }
+});
+
+
+
+
 export default router;
+
+

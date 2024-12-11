@@ -25,22 +25,18 @@ router.get('/', async (req, res) => {
 
 router.post('/registro', async (req, res, next) => {
   try {
-    console.log('Petición recibida para registro:', req.body);
+    const { username, email, password, name = '', birthDate } = req.body;
 
-    const { username, email, password, name = '', birthDate, respuestaCuestionario } = req.body;
-
-    // verificar si ya existe
+    // Verificar si ya existe un usuario
     const usuarioExistente = await Usuario.findOne({ $or: [{ username }, { email }] });
     if (usuarioExistente) {
-      console.log('Error: El usuario o el correo ya están registrados');
       return res.status(400).json({ mensaje: 'El usuario o el correo ya están registrados' });
     }
 
-    // contraseña
+    // Hashear contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('Contraseña hasheada exitosamente');
 
-    // crear nuevo usuario
+    // Crear usuario
     const nuevoUsuario = new Usuario({
       name,
       username,
@@ -61,31 +57,26 @@ router.post('/registro', async (req, res, next) => {
     });
 
     await nuevoUsuario.save();
-    console.log('Usuario guardado en la base de datos:', nuevoUsuario);
 
-    // procesar cuestionario inicial si hay
-    if (respuestaCuestionario) {
-      await procesarCuestionario(respuestaCuestionario, nuevoUsuario._id);
-    }
-
-    // generar token JWT
+    // Generar token
     const token = jwt.sign(
       { id: nuevoUsuario._id, username: nuevoUsuario.username },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-    console.log('Token generado:', token);
 
     res.status(201).json({
+      _id: nuevoUsuario._id,
       mensaje: 'Usuario registrado exitosamente',
       usuario: nuevoUsuario,
       token,
     });
   } catch (error) {
-    console.error('Error durante el registro:', error.message);
     next(error);
   }
 });
+
+
 
 
 // Login de usuario

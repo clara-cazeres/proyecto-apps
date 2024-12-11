@@ -7,7 +7,7 @@ const urlDB = process.env.MONGO_URI;
 
 export const conectarDB = async () => {
   try {
-    await mongoose.connect(urlDB); // Ya no se necesitan opciones
+    await mongoose.connect(urlDB);
     console.log('Successful DB connection');
   } catch (error) {
     console.error('Error al conectar a MongoDB:', error.message);

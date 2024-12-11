@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
+import API_BASE_URL from '../../api/apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CuestionarioInicialScreen = ({ navigation }) => {
   const [cuestionario, setCuestionario] = useState(null);
@@ -10,7 +12,7 @@ const CuestionarioInicialScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchCuestionario = async () => {
       try {
-        const response = await fetch('https://proyecto-apps.onrender.com/cuestionarios'); // Cambia esta URL según corresponda
+        const response = await fetch(`${API_BASE_URL}/cuestionarios`); 
         const data = await response.json();
         const inicialCuestionario = data.find((q) => q.title === 'Cuestionario inicial'); // Encuentra el cuestionario inicial
         setCuestionario(inicialCuestionario);
@@ -26,19 +28,77 @@ const CuestionarioInicialScreen = ({ navigation }) => {
     setAnswers({ ...answers, [questionTitle]: optionId });
   };
 
-  const handleNext = () => {
+
+  const handleNext = async () => {
     const currentQuestionTitle = cuestionario.questions[currentStep].title;
+  
     if (!answers[currentQuestionTitle]) {
       Alert.alert('Error', 'Por favor, selecciona una opción antes de continuar.');
       return;
     }
+  
     if (currentStep < cuestionario.questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
       console.log('Respuestas:', answers);
-      navigation.navigate('Home'); // Cambiar según el siguiente paso
+  
+      try {
+        // Obtener datos de autenticación
+        const authData = await AsyncStorage.getItem('auth');
+
+console.log('Datos de autenticación:', authData);
+
+        if (!authData) {
+          throw new Error('No se encontraron datos de autenticación');
+        }
+  
+        const { token, user } = JSON.parse(authData);
+        if (!user || !user._id) {
+          throw new Error('El usuario no tiene un ID válido');
+        }
+  
+        // Verificar la respuesta clave
+        const respuestaClave = answers['Navego hace']; // Cambiar el título según el cuestionario
+        if (!respuestaClave) {
+          throw new Error('Respuesta clave no proporcionada');
+        }
+  
+        // Enviar respuestas al backend
+        const response = await fetch(`${API_BASE_URL}/cuestionarios/responder`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            userId: user._id, // ID del usuario
+            respuestas: answers,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Error al procesar el cuestionario');
+        }
+  
+        const data = await response.json();
+
+        console.log('Enviando respuestas:', {
+          userId: user._id,
+          respuestas: answers,
+        });
+        
+  
+        Alert.alert('Éxito', 'Cuestionario completado. Ahora puedes empezar tus cursos.');
+        navigation.navigate('Home');
+      } catch (error) {
+        console.error('Error al enviar respuestas del cuestionario:', error.message);
+        Alert.alert('Error', error.message || 'No se pudo procesar el cuestionario.');
+      }
     }
   };
+  
+  
+  
 
   const handlePrevious = () => {
     if (currentStep === 0) {

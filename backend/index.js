@@ -53,7 +53,8 @@ const iniciarServidor = async () => {
   try {
     await conectarDB();
     app.listen(port, () => {
-      console.log(`Servidor corriendo en https://proyecto-apps.onrender.com/`);
+      console.log(`Servidor corriendo en http://localhost:${port}`)
+      //console.log(`Servidor corriendo en https://proyecto-apps.onrender.com/`);
     });
   } catch (error) {
     console.error('Error al iniciar el servidor:', error.message);

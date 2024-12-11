@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import API_BASE_URL from '../api/apiConfig';
 
 export const fetchCuestionario = createAsyncThunk('cuestionarios/fetchCuestionario', async (id) => {
-  const response = await fetch(`https://proyecto-apps.onrender.com/cuestionarios/${id}`);
+  const response = await fetch(`${API_BASE_URL}/cuestionarios/${id}`);
   return response.json();
 });
 
