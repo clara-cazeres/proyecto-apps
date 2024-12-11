@@ -1,5 +1,5 @@
 // Función para procesar las respuestas del cuestionario y asignar clases desbloqueadas
-import Module from '../models/Module.js';
+import Module from '../models/Modulo.js';
 import Usuario from '../models/Usuario.js';
 
 const procesarCuestionario = async (respuestaCuestionario, usuarioId) => {
