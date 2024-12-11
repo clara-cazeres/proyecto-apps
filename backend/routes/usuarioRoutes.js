@@ -5,6 +5,8 @@ import Usuario from '../models/Usuario.js';
 import mongoose from 'mongoose';
 
 import { verificarToken } from '../middlewares/middlewares.js';
+import procesarCuestionario from '../services/procesarCuestionario.js';
+
 
 const router = express.Router();
 
@@ -19,11 +21,13 @@ router.get('/', async (req, res) => {
 });
 
 // Registro de usuario
+// con lógica de procesamiento del cuestionario inicial
+
 router.post('/registro', async (req, res, next) => {
   try {
     console.log('Petición recibida para registro:', req.body);
 
-    const { username, email, password, name = '', birthDate } = req.body;
+    const { username, email, password, name = '', birthDate, respuestaCuestionario } = req.body;
 
     // Verificar si el usuario o email ya existen
     const usuarioExistente = await Usuario.findOne({ $or: [{ username }, { email }] });
@@ -59,6 +63,11 @@ router.post('/registro', async (req, res, next) => {
     await nuevoUsuario.save();
     console.log('Usuario guardado en la base de datos:', nuevoUsuario);
 
+    // Procesar cuestionario inicial si está presente
+    if (respuestaCuestionario) {
+      await procesarCuestionario(respuestaCuestionario, nuevoUsuario._id);
+    }
+
     // Generar token JWT
     const token = jwt.sign(
       { id: nuevoUsuario._id, username: nuevoUsuario.username },
@@ -66,7 +75,6 @@ router.post('/registro', async (req, res, next) => {
       { expiresIn: '1h' }
     );
     console.log('Token generado:', token);
-
 
     res.status(201).json({
       mensaje: 'Usuario registrado exitosamente',
@@ -78,6 +86,7 @@ router.post('/registro', async (req, res, next) => {
     next(error);
   }
 });
+
 
 // Login de usuario
 router.post('/login', async (req, res, next) => {

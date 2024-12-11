@@ -24,7 +24,6 @@ const ModuleCard = ({ module, moduleNumber, onPress, showExtraInfo = true }) => 
 );
 
 
-
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
@@ -34,11 +33,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   image: {
     width: 100,
-    height: '100%',
+    height: 120,
     borderRadius: 10,
     marginRight: 10,
   },
@@ -47,21 +46,20 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   moduleNumber: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#777',
     textTransform: 'uppercase',
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
     marginVertical: 5,
   },
   description: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#555',
   },
   lessonsCount: {
-    fontSize: 12,
+    fontSize: 9,
     color: '#888',
     textAlign: 'right',
   },

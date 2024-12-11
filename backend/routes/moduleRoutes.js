@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
 // Crear un nuevo curso
 router.post('/', async (req, res) => {
   try {
-    console.log('Cuerpo recibido:', req.body); // Agregar log aquí
+    console.log('Cuerpo recibido:', req.body); 
     const module = new Module(req.body);
     await module.save();
     res.status(201).json(module);
