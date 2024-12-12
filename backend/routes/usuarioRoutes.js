@@ -144,6 +144,32 @@ router.get('/:id', verificarToken, async (req, res) => {
   }
 });
 
+
+//editar perfil de usuario 
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { city, country, height, weight, vo2max, boatType, boatName, aboutMe } = req.body;
+
+  try {
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(
+      id,
+      { city, country, height, weight, vo2max, boatType, boatName, aboutMe },
+      { new: true }
+    );
+
+    if (!usuarioActualizado) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
+    }
+
+    res.status(200).json({ mensaje: 'Usuario actualizado con éxito.', usuario: usuarioActualizado });
+  } catch (error) {
+    console.error('Error al actualizar usuario:', error.message);
+    res.status(500).json({ mensaje: 'Error al actualizar usuario.' });
+  }
+});
+
+
+//actualizar clases completadas por
 router.post('/update-completed-classes', async (req, res) => {
   const { userId, completedClassId } = req.body;
   if (!userId || !completedClassId) {

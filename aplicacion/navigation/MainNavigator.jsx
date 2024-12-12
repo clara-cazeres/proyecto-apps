@@ -18,6 +18,7 @@ import CuestionarioInicialScreen from '../screens/auth/CuestionarioInicialScreen
 
 import CrearPreguntaScreen from '../screens/CrearPreguntaScreen';
 import PreguntaScreen from '../screens/PreguntaScreen';
+import EditarPerfilScreen from '../screens/EditarPerfilScreen';
 
 
 const Drawer = createDrawerNavigator();
@@ -42,8 +43,9 @@ const MainNavigator = () => {
 
       
       <Drawer.Screen name="CrearPregunta" component={CrearPreguntaScreen} options={{ drawerLabel: () => null, title: undefined, drawerItemStyle: { height: 0 } }} />
-      <Stack.Screen name="QuestionDetail" component={PreguntaScreen}options={{ drawerLabel: () => null, title: undefined, drawerItemStyle: { height: 0 } }}  />
+      <Drawer.Screen name="QuestionDetail" component={PreguntaScreen}options={{ drawerLabel: () => null, title: undefined, drawerItemStyle: { height: 0 } }}  />
 
+      <Drawer.Screen name="EditarPerfil" component={EditarPerfilScreen} options={{ drawerLabel: () => null, title: undefined, drawerItemStyle: { height: 0 } }} />
 
 
 

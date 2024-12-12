@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { MaterialIcons, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
@@ -8,21 +7,21 @@ import Button from '../components/Button';
 import API_BASE_URL from '../api/apiConfig';
 
 const PerfilScreen = ({ navigation }) => {
-  const { token, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, user, token } = useSelector((state) => state.auth);
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user || !user.id) {
-      setError('Usuario no autenticado');
-      setLoading(false);
-      return;
-    }
+    const fetchPerfil = async () => {
+      if (!user || !user.id || !token) {
+        setError('Usuario no autenticado. Por favor, inicia sesión.');
+        setLoading(false);
+        return;
+      }
 
-    const fetchUser = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/usuarios/${user._id}`, {
+        const response = await fetch(`${API_BASE_URL}/usuarios/${user.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -31,32 +30,43 @@ const PerfilScreen = ({ navigation }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Error al obtener el usuario');
+          throw new Error('Error al obtener el perfil.');
         }
 
         const data = await response.json();
         setPerfil(data);
-        setLoading(false);
       } catch (err) {
-        console.error(err.message);
-        setError('Error al cargar la información del perfil');
+        console.error('Error al obtener el perfil:', err.message);
+        setError('Error al cargar el perfil. Intenta nuevamente.');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
-  }, [token, user]);
-
-  const calculateAge = (birthDate) => {
-    const today = new Date();
-    const birthDateObj = new Date(birthDate);
-    let age = today.getFullYear() - birthDateObj.getFullYear();
-    const monthDiff = today.getMonth() - birthDateObj.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-      age--;
+    if (isAuthenticated) {
+      fetchPerfil();
+    } else {
+      setLoading(false);
+      setError('Usuario no autenticado. Por favor, inicia sesión.');
     }
-    return age;
-  };
+  }, [isAuthenticated, user, token]);
+
+  if (!isAuthenticated) {
+    return (
+      <View style={styles.container}>
+        <TopNavbar navigation={navigation} title="Mi Perfil" />
+        <View style={styles.messageContainer}>
+          <Text style={styles.errorText}>
+            Usuario no pudo ser autenticado. Por favor, inicia sesión.
+          </Text>
+          <Button
+            title="Ir al inicio de sesión"
+            onPress={() => navigation.navigate('Login')}
+          />
+        </View>
+      </View>
+    );
+  }
 
   if (loading) {
     return (
@@ -72,8 +82,10 @@ const PerfilScreen = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <TopNavbar navigation={navigation} title="Mi Perfil" />
-        <Text style={styles.message}>{error}</Text>
-        <BottomNavbar navigation={navigation} activeTab="Mi perfil" />
+        <View style={styles.messageContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <Button title="Volver a intentar" onPress={() => navigation.navigate('Login')} />
+        </View>
       </View>
     );
   }
@@ -82,74 +94,68 @@ const PerfilScreen = ({ navigation }) => {
     <View style={styles.container}>
       <TopNavbar navigation={navigation} title="Mi Perfil" />
       <ScrollView>
-        {/* Header Azul */}
         <View style={styles.headerContainer}>
-          <View style={styles.profileImageContainer}>
-            {perfil.userImg ? (
-              <Image source={{ uri: perfil.userImg }} style={styles.profileImage} />
-            ) : (
-              <View style={styles.placeholderImage}>
-                <Text style={styles.placeholderText}>IMG</Text>
-              </View>
-            )}
-          </View>
-          <Text style={styles.name}>{perfil.name}</Text>
+          <Text style={styles.name}>{perfil?.name || 'Usuario'}</Text>
         </View>
-
-        {/* Información del usuario */}
         <View style={styles.infoContainer}>
-          {perfil.city && perfil.country && (
+          {perfil?.city || perfil?.country ? (
             <View style={styles.infoRow}>
-              <MaterialIcons name="location-on" size={22} color="#333" />
-              <Text style={styles.infoText}>{perfil.city}, {perfil.country}</Text>
+              <Text style={styles.infoText}>
+                {perfil.city}, {perfil.country}
+              </Text>
             </View>
-          )}
-          {perfil.birthDate && (
+          ) : null}
+          {perfil?.birthDate ? (
             <View style={styles.infoRow}>
-              <FontAwesome5 name="user-alt" size={18} color="black" />
-              <Text style={styles.infoText}>{calculateAge(perfil.birthDate)} años</Text>
+              <Text style={styles.infoText}>
+                Fecha de nacimiento: {new Date(perfil.birthDate).toLocaleDateString()}
+              </Text>
             </View>
-          )}
-          {perfil.boatType && (
+          ) : null}
+          {perfil?.boatType ? (
             <View style={styles.infoRow}>
-             
-              <MaterialCommunityIcons name="sail-boat" size={20} color="black" />
               <Text style={styles.infoText}>Navego en: {perfil.boatType}</Text>
             </View>
-          )}
-          {perfil.courseLevel && (
+          ) : null}
+          {perfil?.aboutMe ? (
             <View style={styles.infoRow}>
-              <Entypo name="book" size={20} color="#333" />
-              <Text style={styles.infoText}>Nivel de curso: {perfil.courseLevel}</Text>
+              <Text style={styles.infoText}>Sobre mí: {perfil.aboutMe}</Text>
             </View>
-          )}
+          ) : null}
         </View>
 
-        {/* Mis Datos */}
         <View style={styles.dataContainer}>
           <Text style={styles.sectionTitle}>Mis datos</Text>
           <View style={styles.dataBoxesContainer}>
             <View style={styles.dataBox}>
               <Text style={styles.dataBoxText}>Peso</Text>
-              <Text style={styles.dataBoxValue}>{perfil.weight || 'N/A'} Kg</Text>
+              <Text style={styles.dataBoxValue}>
+                {perfil.weight ? `${perfil.weight} Kg` : 'N/A'}
+              </Text>
             </View>
             <View style={styles.dataBox}>
-              <Text style={styles.dataBoxText}>Estatura</Text>
-              <Text style={styles.dataBoxValue}>{perfil.height ? `${(perfil.height / 100).toFixed(2)} m` : 'N/A'}</Text>
+              <Text style={styles.dataBoxText}>Altura</Text>
+              <Text style={styles.dataBoxValue}>
+                {perfil.height ? `${(perfil.height / 100).toFixed(2)} m` : 'N/A'}
+              </Text>
             </View>
             <View style={styles.dataBox}>
-              <Text style={styles.dataBoxText}>VO2 Max</Text>
-              <Text style={styles.dataBoxValue}>{perfil.vo2max || 'N/A'} ml/kg/min</Text>
+              <Text style={styles.dataBoxText}>VO2Max</Text>
+              <Text style={styles.dataBoxValue}>
+                {perfil.vo2max ? `${perfil.vo2max} ml/kg/min` : 'N/A'}
+              </Text>
             </View>
           </View>
-          <Button title="EDITAR PERFIL" onPress={() => alert('Registrar nuevos datos')} />
         </View>
+        <Button
+          title="EDITAR PERFIL"
+          onPress={() => navigation.navigate('EditarPerfil')}
+        />
       </ScrollView>
       <BottomNavbar navigation={navigation} activeTab="Mi perfil" />
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -157,34 +163,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     paddingBottom: 70,
   },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headerContainer: {
     backgroundColor: '#2A6295',
     alignItems: 'center',
     paddingVertical: 20,
-  },
-  profileImageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 60,
-    overflow: 'hidden',
-    backgroundColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-  },
-  placeholderImage: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ccc',
-  },
-  placeholderText: {
-    fontSize: 18,
-    color: '#fff',
   },
   name: {
     fontSize: 22,
@@ -196,9 +183,6 @@ const styles = StyleSheet.create({
   infoContainer: {
     padding: 20,
   },
-  infoContainer: {
-    padding: 20,
-  },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -206,7 +190,6 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 16,
-    marginLeft: 10,
     color: '#333',
   },
   dataContainer: {
@@ -239,6 +222,22 @@ const styles = StyleSheet.create({
   dataBoxText: {
     fontSize: 14,
     color: '#333',
+  },
+  dataBoxValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#ff0000',
+    margin: 20,
+    textAlign: 'center',
+  },
+  message: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginTop: 20,
   },
 });
 
