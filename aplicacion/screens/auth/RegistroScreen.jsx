@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import authStyles from '../../styles/auth-styles';
@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../redux/authSlice';
 
 const RegistroScreen = ({ navigation }) => {
-  const dispatch = useDispatch(); // Inicializa el dispatch aquí
+  const dispatch = useDispatch(); 
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,6 +20,13 @@ const RegistroScreen = ({ navigation }) => {
     birthDate: '',
     gender: '',
   });
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(formData.gender || '');
+  const [items, setItems] = useState([
+   { label: 'Hombre', value: 'Male' },
+   { label: 'Mujer', value: 'Female' },
+  ]); 
 
   const validarFecha = (fecha) => {
     const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -35,10 +42,10 @@ const RegistroScreen = ({ navigation }) => {
     console.log('Datos enviados al backend:', formData);
   
     try {
-      const data = await registrarUsuario(formData); // Llama al servicio de registro
+      const data = await registrarUsuario(formData);
       console.log('Respuesta recibida del backend:', data);
   
-      const { token, usuario } = data; // Verifica la clave correcta de usuario
+      const { token, usuario } = data;
       if (!usuario) {
         throw new Error('Usuario no recibido en la respuesta del backend');
       }
@@ -48,7 +55,6 @@ const RegistroScreen = ({ navigation }) => {
       if (token) {
         console.log('Token recibido:', token);
   
-        // Despacha la acción de login
         dispatch(login({ token, user: usuario }));
   
         Alert.alert('Éxito', 'Registro exitoso.');
@@ -102,17 +108,20 @@ const RegistroScreen = ({ navigation }) => {
         onChangeText={(text) => setFormData({ ...formData, birthDate: text })}
       />
 
-      <View style={authStyles.pickerContainer}>
-        <Picker
-          selectedValue={formData.gender}
-          onValueChange={(value) => setFormData({ ...formData, gender: value })}
-          style={authStyles.picker}
-        >
-          <Picker.Item label="Seleccionar género" value="" />
-          <Picker.Item label="Hombre" value="Male" />
-          <Picker.Item label="Mujer" value="Female" />
-        </Picker>
-      </View>
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={(val) => {
+          setValue(val);
+          setFormData({ ...formData, gender: val });
+        }}
+        setItems={setItems}
+        style={authStyles.pickerContainer}
+        textStyle={{ color: '#333', fontSize: 16 }}
+        placeholder="Seleccionar género"
+      />
 
       <Button title="REGISTRARME" onPress={handleRegister} />
 
