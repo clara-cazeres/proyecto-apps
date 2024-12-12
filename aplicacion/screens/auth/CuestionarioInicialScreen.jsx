@@ -14,7 +14,7 @@ const CuestionarioInicialScreen = ({ navigation }) => {
       try {
         const response = await fetch(`${API_BASE_URL}/cuestionarios`); 
         const data = await response.json();
-        const inicialCuestionario = data.find((q) => q.title === 'Cuestionario inicial'); // Encuentra el cuestionario inicial
+        const inicialCuestionario = data.find((q) => q.title === 'Cuestionario inicial'); 
         setCuestionario(inicialCuestionario);
       } catch (error) {
         console.error('Error al cargar el cuestionario:', error);
@@ -43,7 +43,7 @@ const CuestionarioInicialScreen = ({ navigation }) => {
       console.log('Respuestas:', answers);
   
       try {
-        // Obtener datos de autenticación
+        //  datos de autenticacion
         const authData = await AsyncStorage.getItem('auth');
 
 console.log('Datos de autenticación:', authData);
@@ -56,14 +56,13 @@ console.log('Datos de autenticación:', authData);
         if (!user || !user._id) {
           throw new Error('El usuario no tiene un ID válido');
         }
-  
-        // Verificar la respuesta clave
-        const respuestaClave = answers['Navego hace']; // Cambiar el título según el cuestionario
+
+        const respuestaClave = answers['Navego hace'];
         if (!respuestaClave) {
           throw new Error('Respuesta clave no proporcionada');
         }
   
-        // Enviar respuestas al backend
+        // enviar respuestas al backend
         const response = await fetch(`${API_BASE_URL}/cuestionarios/responder`, {
           method: 'POST',
           headers: {
@@ -71,7 +70,7 @@ console.log('Datos de autenticación:', authData);
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            userId: user._id, // ID del usuario
+            userId: user._id,
             respuestas: answers,
           }),
         });
@@ -102,7 +101,7 @@ console.log('Datos de autenticación:', authData);
 
   const handlePrevious = () => {
     if (currentStep === 0) {
-      navigation.goBack(); // Vuelve a la pantalla anterior al cuestionario
+      navigation.goBack(); 
     } else {
       setCurrentStep(currentStep - 1);
     }
@@ -121,12 +120,11 @@ console.log('Datos de autenticación:', authData);
 
   return (
     <View style={styles.container}>
-      {/* Pregunta actual */}
+    
       <View style={styles.questionContainer}>
         <Text style={styles.title}>{currentQuestion.title}</Text>
         <Text style={styles.description}>{currentQuestion.description}</Text>
 
-        {/* Opciones como botones */}
         <FlatList
           data={currentQuestion.options}
           keyExtractor={(item) => item.id}
@@ -151,7 +149,6 @@ console.log('Datos de autenticación:', authData);
         />
       </View>
 
-      {/* Navegación entre preguntas */}
       <View style={styles.navigationContainer}>
         <Text style={styles.questionProgress}>
           Pregunta {currentStep + 1} de {cuestionario.questions.length}

@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken';
 
 // middlewares generales
 export const applyMiddlewares = (app) => {
-    app.use(cors()); // Manejo de CORS
-    app.use(express.json()); // Parseo de JSON
-    app.use(mostrarDatosRequest); // Middleware para logging
+    app.use(cors()); 
+    app.use(express.json()); 
+    app.use(mostrarDatosRequest); 
   };
 
 // middleware para mostrar datos de la request
@@ -14,7 +14,7 @@ export const mostrarDatosRequest = (req, res, next) => {
   console.log('METHOD:', req.method);
   console.log('URL:', req.url);
   console.log('BODY:', req.body);
-  next(); // pasa al siguiente middleware
+  next(); 
 };
 
 // middleware para manejar errores
@@ -39,7 +39,7 @@ export const verificarToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log('Token decodificado exitosamente:', decoded);
-    req.user = decoded; // Información decodificada del token
+    req.user = decoded; 
     next();
   } catch (error) {
     console.log('Error al verificar el token:', error.message);

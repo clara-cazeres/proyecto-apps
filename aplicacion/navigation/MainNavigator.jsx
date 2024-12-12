@@ -68,9 +68,8 @@ const MainNavigator = () => {
 export default function AppNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* Drawer menu */}
+      
       <Stack.Screen name="MainDrawer" component={MainNavigator} />
-      {/* Cuestionario stack */}
       <Stack.Screen name="CuestionarioFlow" component={CuestionarioStack} />
     </Stack.Navigator>
   );

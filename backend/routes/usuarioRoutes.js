@@ -13,8 +13,8 @@ const router = express.Router();
 // Obtener usuarios
 router.get('/', async (req, res) => {
   try {
-    const usuarios = await Usuario.find(); // Obtiene todos los usuarios
-    res.status(200).json(usuarios); // Devuelve los usuarios como JSON
+    const usuarios = await Usuario.find(); 
+    res.status(200).json(usuarios); 
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al obtener los usuarios', error: error.message });
   }
@@ -27,16 +27,15 @@ router.post('/registro', async (req, res, next) => {
   try {
     const { username, email, password, name = '', birthDate } = req.body;
 
-    // Verificar si ya existe un usuario
+ 
     const usuarioExistente = await Usuario.findOne({ $or: [{ username }, { email }] });
     if (usuarioExistente) {
       return res.status(400).json({ mensaje: 'El usuario o el correo ya están registrados' });
     }
 
-    // Hashear contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear usuario
+    // crear usuario
     const nuevoUsuario = new Usuario({
       name,
       username,
@@ -58,7 +57,7 @@ router.post('/registro', async (req, res, next) => {
 
     await nuevoUsuario.save();
 
-    // Generar token
+    // generar token
     const token = jwt.sign(
       { id: nuevoUsuario._id, username: nuevoUsuario.username },
       process.env.JWT_SECRET,
@@ -89,13 +88,11 @@ router.post('/login', async (req, res, next) => {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
 
-    // Verificar la contraseña
     const esValida = await bcrypt.compare(password, usuario.password);
     if (!esValida) {
       return res.status(401).json({ mensaje: 'Credenciales incorrectas' });
     }
 
-    // Generar el token JWT
     const token = jwt.sign(
       { id: usuario._id, username: usuario.username },
       process.env.JWT_SECRET,
@@ -111,7 +108,7 @@ router.post('/login', async (req, res, next) => {
         email: usuario.email,
         username: usuario.username,
         birthDate: usuario.birthDate,
-        // Agrega más campos según sea necesario
+  
       },
     });
   } catch (error) {
@@ -119,7 +116,7 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-// Obtener perfil de un usuario por ID
+// get  perfil de usuario 
 
 router.get('/:id', verificarToken, async (req, res) => {
   const { id } = req.user; 
@@ -169,7 +166,7 @@ router.put('/:id', async (req, res) => {
 });
 
 
-//actualizar clases completadas por
+//actualizar clases completadas por un uduario
 router.post('/update-completed-classes', async (req, res) => {
   const { userId, completedClassId } = req.body;
   if (!userId || !completedClassId) {
@@ -183,7 +180,7 @@ router.post('/update-completed-classes', async (req, res) => {
     }
 
     if (!user.completedClasses.includes(completedClassId)) {
-      user.completedClasses.push(completedClassId); // Solo agrega el ID actual
+      user.completedClasses.push(completedClassId); 
       await user.save();
     }
 

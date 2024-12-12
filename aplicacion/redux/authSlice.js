@@ -16,7 +16,7 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.user = action.payload.user;
 
-      // Guardar en AsyncStorage
+      // guardar en AsyncStorage
       AsyncStorage.setItem('auth', JSON.stringify({
         token: action.payload.token,
         user: action.payload.user,
@@ -27,7 +27,7 @@ const authSlice = createSlice({
       state.token = null;
       state.user = null;
 
-      // Eliminar datos de AsyncStorage
+      // eliminar datos para hacer logout
       AsyncStorage.removeItem('auth');
     },
     setAuthFromStorage(state, action) {

@@ -23,7 +23,7 @@ const moduleSchema = new mongoose.Schema({
   goal: { type: String, required: true },
   courseLevel: { type: String, required: true },
   category: { type: Array, required: true },
-  lessons: [lessonSchema], // Array de lecciones que componen el curso
+  lessons: [lessonSchema], 
   createdAt: { type: Date, default: Date.now },
 });
 

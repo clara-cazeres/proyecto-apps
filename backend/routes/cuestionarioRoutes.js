@@ -5,7 +5,7 @@ import Usuario from '../models/Usuario.js';
 
 const router = express.Router();
 
-// Crear un nuevo cuestionario
+// post un nuevo cuestionario
 router.post('/', async (req, res) => {
   try {
     const cuestionario = new Cuestionario(req.body);
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Obtener todos los cuestionarios
+// get todos los cuestionarios
 router.get('/', async (req, res) => {
   try {
     const cuestionarios = await Cuestionario.find();
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Obtener un cuestionario por ID
+// get un cuestionario por id
 router.get('/:id', async (req, res) => {
   try {
     const cuestionario = await Cuestionario.findById(req.params.id);
@@ -47,17 +47,14 @@ router.post('/responder', async (req, res) => {
       return res.status(400).json({ mensaje: 'Faltan datos para procesar el cuestionario' });
     }
 
-    // Verifica si el usuario existe en la base de datos
     const usuario = await Usuario.findById(userId);
     if (!usuario) {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
 
-    // Procesa las respuestas del cuestionario (puedes personalizar esta lógica)
     console.log('Procesando cuestionario para el usuario:', userId);
     console.log('Respuestas recibidas:', respuestas);
 
-    // Aquí puedes llamar a `procesarCuestionario` si es necesario
     const clasesDesbloqueadas = await procesarCuestionario(respuestas['Navego hace'], userId);
 
     res.status(200).json({
@@ -69,9 +66,6 @@ router.post('/responder', async (req, res) => {
     res.status(500).json({ mensaje: 'Error al procesar el cuestionario', error: error.message });
   }
 });
-
-
-
 
 
 export default router;

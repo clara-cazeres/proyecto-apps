@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // Importar íconos de Material Design
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigationState, useNavigation } from '@react-navigation/native';
 
 const BottomNavbar = () => {
   const navigation = useNavigation();
 
-  // Obtener el índice actual de la navegación
   const currentRouteName = useNavigationState((state) => state.routes[state.index]?.name);
 
   const tabs = [
@@ -18,7 +17,7 @@ const BottomNavbar = () => {
 
   const handlePress = (tab) => {
     if (navigation && navigation.navigate) {
-      navigation.navigate(tab.key); // Navegar a la ruta seleccionada
+      navigation.navigate(tab.key); //a ruta seleccionada
     }
   };
 

@@ -20,7 +20,7 @@ const LessonScreen = ({ route, navigation }) => {
       console.log('Datos de autenticación:', parsedAuthData);
   
       const { token, user } = parsedAuthData;
-      const userId = user.id || user._id; // Ajustar según la estructura del usuario
+      const userId = user.id || user._id; 
       if (!userId) throw new Error('El usuario no tiene un ID válido');
   
       console.log('Datos que se enviarán al backend:', {
@@ -76,7 +76,7 @@ const LessonScreen = ({ route, navigation }) => {
         showBackButton
       />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Video */}
+        
         <View style={styles.videoContainer}>
           <Video
             source={{ uri: lesson.video }}
@@ -85,12 +85,12 @@ const LessonScreen = ({ route, navigation }) => {
           />
         </View>
 
-        {/* Contenido */}
+        
         <Text style={styles.title}>{lesson.title.toUpperCase()}</Text>
         <Text style={styles.subtitle}>Resumen de la clase</Text>
         <Text style={styles.summary}>{lesson.summary}</Text>
 
-        {/* Botones */}
+   
         <View style={styles.buttonContainer}>
           <Button
             iconName="file-download"

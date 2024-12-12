@@ -3,7 +3,7 @@ import Module from '../models/Modulo.js';
 
 const router = express.Router();
 
-// Obtener todos los cursos
+// get cursos (modulos)
 router.get('/', async (req, res) => {
   try {
     const modules = await Module.find();
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Obtener un curso por ID
+// obtener modulo por id
 router.get('/:id', async (req, res) => {
   try {
     const module = await Module.findById(req.params.id);
@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
 });
 
 
-// Crear un nuevo curso
+// post nuevo curso
 router.post('/', async (req, res) => {
   try {
     console.log('Cuerpo recibido:', req.body); 
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 });
 
 
-// Actualizar un curso
+//editar curso
 router.put('/:id', async (req, res) => {
   try {
     const module = await Module.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -54,17 +54,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Eliminar un curso
-router.delete('/:id', async (req, res) => {
-  try {
-    const module = await Module.findByIdAndDelete(req.params.id);
-    if (!module) {
-      return res.status(404).json({ mensaje: 'Curso no encontrado' });
-    }
-    res.status(200).json({ mensaje: 'Curso eliminado correctamente' });
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al eliminar el curso', error: error.message });
-  }
-});
+
 
 export default router;

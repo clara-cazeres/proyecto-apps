@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import globalStyles from '../styles/styles';
@@ -15,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
         const response = await fetch(`${API_BASE_URL}/modules`);
         const data = await response.json();
         if (data.length > 0) {
-          setModule(data[0]); // Muestra el primer módulo.
+          setModule(data[0]); 
           setModuleNumber(1);
         }
       } catch (error) {
@@ -26,21 +33,28 @@ const HomeScreen = ({ navigation }) => {
     fetchModule();
   }, []);
 
+  const handleCardPress = () => {
+    if (module) {
+      navigation.navigate('Module', {
+        moduleId: module._id,
+        moduleNumber: moduleNumber,
+      });
+    }
+  };
+
   return (
     <View style={globalStyles.safeArea}>
-      {/* AppBar */}
+     
       <TopNavbar title="SAIL ACADEMY" />
 
-      {/* Contenido central */}
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={[globalStyles.title, styles.welcomeTitle]}>
           ¡BIENVENIDO!
         </Text>
         <Text style={styles.subtitle}>COMENZÁ TU CURSO</Text>
 
-        {/* Tarjeta del módulo destacado */}
         {module ? (
-          <View style={styles.card}>
+          <TouchableOpacity onPress={handleCardPress} style={styles.card}>
             <Image
               source={{ uri: module.img }}
               style={styles.cardImage}
@@ -53,13 +67,12 @@ const HomeScreen = ({ navigation }) => {
                 {module.lessons.length > 1 ? 's' : ''}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
         ) : (
           <Text style={styles.noModule}>No hay módulos disponibles</Text>
         )}
       </ScrollView>
 
-      {/* Bottom Navbar */}
       <BottomNavbar navigation={navigation} />
     </View>
   );

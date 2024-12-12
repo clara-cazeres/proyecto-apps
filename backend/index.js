@@ -48,10 +48,10 @@ app.use('/cuestionarios', cuestionarioRoutes);
 
 app.use('/preguntas', preguntasRoutes);
 
-// Middleware para manejar errores
+// middleware para manejar errores
 app.use(manejarErrores);
 
-// Iniciar el servidor
+// iniciar el servidor
 const iniciarServidor = async () => {
   try {
     await conectarDB();

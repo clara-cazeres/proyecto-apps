@@ -9,14 +9,14 @@ const preguntaSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: false },
   type: { type: String, required: true },
-  correctAnswer: { type: [String] }, // IDs de las respuestas correctas
-  options: [opcionSchema], // Array de opciones
+  correctAnswer: { type: [String] }, 
+  options: [opcionSchema], 
 });
 
 const cuestionarioSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  questions: [preguntaSchema], // Array de preguntas
+  questions: [preguntaSchema], 
 });
 
 const Cuestionario = mongoose.model('Cuestionario', cuestionarioSchema);

@@ -9,7 +9,7 @@ const CuestionarioInicialPrompt = () => {
   const handleSkip = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: 'MainDrawer' }], // Redirige al flujo principal (Drawer.Navigator)
+      routes: [{ name: 'MainDrawer' }], 
     });
   };
 
@@ -26,7 +26,7 @@ const CuestionarioInicialPrompt = () => {
         />
         <Button
           title="Comenzar desde cero"
-          onPress={handleSkip} // Usa la función para redirigir correctamente
+          onPress={handleSkip} 
           style={styles.secondaryButton}
         />
       </View>

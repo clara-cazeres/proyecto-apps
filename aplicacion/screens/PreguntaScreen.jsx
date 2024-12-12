@@ -6,7 +6,7 @@ import API_BASE_URL from '../api/apiConfig';
 import { useSelector } from 'react-redux';
 
 const PreguntaScreen = ({ route, navigation }) => {
-  const { questionId } = route.params; // ID de la pregunta
+  const { questionId } = route.params; 
   const [question, setQuestion] = useState(null);
   const [responseText, setResponseText] = useState('');
   const { user } = useSelector((state) => state.auth);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // Cambia el paquete de íconos según el diseño de tu app
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 const Button = ({ title, onPress, variant = 'filled', disabled = false, iconName }) => {
   const buttonStyle = [

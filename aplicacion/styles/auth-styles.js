@@ -4,7 +4,7 @@ const authStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    marginTop: 30,
   },
   backButton: {
     marginTop: 10,
@@ -34,6 +34,7 @@ const authStyles = StyleSheet.create({
     borderRadius: 6,
     padding: 10,
     marginBottom: 15,
+    backgroundColor: '#ffffff',
   },
   pickerContainer: {
     borderWidth: 1,

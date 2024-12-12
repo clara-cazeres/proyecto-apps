@@ -4,7 +4,7 @@ import { verificarToken } from '../middlewares/middlewares.js';
 
 const router = express.Router();
 
-// Obtener todas las preguntas
+// get preguntas
 router.get('/', async (req, res) => {
   try {
     const preguntas = await Pregunta.find().sort({ date: -1 });
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Crear una nueva pregunta
+// post nueva pregunta
 router.post('/', async (req, res) => {
     try {
       const { title, description, user, courseLevel, category, img } = req.body;
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
   });
   
 
-// Obtener una pregunta por ID
+// get pregunta por id
 router.get('/:id', async (req, res) => {
   try {
     const pregunta = await Pregunta.findById(req.params.id);
@@ -51,7 +51,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Añadir una respuesta a una pregunta
+// post respuesta a una pregunta 
 router.post('/:id/respuestas', async (req, res) => {
     try {
       const { user, description, img } = req.body;

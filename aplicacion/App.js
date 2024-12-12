@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import store from './redux/store';
 import MainNavigator from './navigation/MainNavigator';
-import AuthLoader from './components/auth/AuthLoader'; // Componente separado para manejar la carga inicial
+import AuthLoader from './components/auth/AuthLoader'; 
 
 export default function App() {
   return (

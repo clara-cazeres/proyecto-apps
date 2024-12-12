@@ -7,9 +7,9 @@ const LogoutScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Despacha la acción de logout al montarse el componente
+    
     dispatch(logout());
-    // Redirige a la pantalla de inicio después del logout
+   
     navigation.navigate('Home');
   }, [dispatch, navigation]);
 

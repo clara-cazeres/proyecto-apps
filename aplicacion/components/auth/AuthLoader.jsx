@@ -22,7 +22,7 @@ const AuthLoader = ({ children }) => {
     cargarEstadoAuth();
   }, [dispatch]);
 
-  return <>{children}</>; // Renderiza los hijos después de la carga
+  return <>{children}</>; 
 };
 
 export default AuthLoader;

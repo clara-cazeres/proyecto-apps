@@ -14,7 +14,7 @@ const LoginScreen = ({ navigation }) => {
     password: '',
   });
 
-  // Usa el hook useDispatch para obtener el dispatch
+
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
@@ -29,8 +29,6 @@ const LoginScreen = ({ navigation }) => {
         console.log('Token recibido:', token);
         console.log('infousuario after login:', user);
 
-  
-        // Despacha la acción de login
         dispatch(login({ token, user }));
   
         Alert.alert('Éxito', 'Inicio de sesión exitoso');
