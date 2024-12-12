@@ -35,7 +35,7 @@ const Button = ({ title, onPress, variant = 'filled', disabled = false, iconName
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#2A6295',
-    borderRadius: 20,
+    borderRadius: 60,
     paddingVertical: 10,
     paddingHorizontal: 20,
     alignSelf: 'center',

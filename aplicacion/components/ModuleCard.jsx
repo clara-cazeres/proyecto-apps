@@ -10,7 +10,7 @@ const ModuleCard = ({ module, moduleNumber, onPress, isLocked = false }) => (
     <Image source={{ uri: module.img }} style={styles.image} />
     {isLocked && (
       <View style={styles.overlay}>
-        <Icon name="lock" size={30} color="#FFF" />
+        <Icon name="lock" size={30} color="#fff" />
       </View>
     )}
     <View style={styles.textContainer}>
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     alignItems: 'flex-start',
     position: 'relative',
+    width:'100%'
   },
   cardLocked: {
     opacity: 0.7,

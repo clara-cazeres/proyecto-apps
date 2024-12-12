@@ -7,6 +7,7 @@ import { applyMiddlewares, manejarErrores } from './middlewares/middlewares.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import moduleRoutes from './routes/moduleRoutes.js';
 import cuestionarioRoutes from './routes/cuestionarioRoutes.js'
+import preguntasRoutes from './routes/preguntasRoutes.js';
 import dotenv from 'dotenv';
 
 
@@ -45,6 +46,8 @@ app.use('/modules', moduleRoutes);
 
 app.use('/cuestionarios', cuestionarioRoutes);
 
+app.use('/preguntas', preguntasRoutes);
+
 // Middleware para manejar errores
 app.use(manejarErrores);
 
@@ -53,8 +56,8 @@ const iniciarServidor = async () => {
   try {
     await conectarDB();
     app.listen(port, () => {
-      //console.log(`Servidor corriendo en http://localhost:${port}`)
-      console.log(`Servidor corriendo en https://proyecto-apps.onrender.com/`);
+      console.log(`Servidor corriendo en http://localhost:${port}`)
+      //console.log(`Servidor corriendo en https://proyecto-apps.onrender.com/`);
     });
   } catch (error) {
     console.error('Error al iniciar el servidor:', error.message);

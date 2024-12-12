@@ -16,6 +16,10 @@ import LogoutScreen from '../screens/auth/LogoutScreen';
 import CuestionarioInicialPrompt from '../screens/auth/CuestionarioInicialPrompt';
 import CuestionarioInicialScreen from '../screens/auth/CuestionarioInicialScreen';
 
+import CrearPreguntaScreen from '../screens/CrearPreguntaScreen';
+import PreguntaScreen from '../screens/PreguntaScreen';
+
+
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
@@ -35,6 +39,13 @@ const MainNavigator = () => {
       <Drawer.Screen name="Cursos" component={CursosStack} />
       <Drawer.Screen name="Comunidad" component={ComunidadScreen} />
       <Drawer.Screen name="Perfil" component={PerfilScreen} />
+
+      
+      <Drawer.Screen name="CrearPregunta" component={CrearPreguntaScreen} options={{ drawerLabel: () => null, title: undefined, drawerItemStyle: { height: 0 } }} />
+      <Stack.Screen name="QuestionDetail" component={PreguntaScreen}options={{ drawerLabel: () => null, title: undefined, drawerItemStyle: { height: 0 } }}  />
+
+
+
 
       {!isAuthenticated ? (
         <>

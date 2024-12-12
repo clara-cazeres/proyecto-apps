@@ -94,7 +94,7 @@ const LessonScreen = ({ route, navigation }) => {
         <View style={styles.buttonContainer}>
           <Button
             iconName="file-download"
-            onPress={() => Linking.openURL('https://example.com/download.pdf')}
+            onPress={() => Linking.openURL('https://res.cloudinary.com/dflzegwev/image/upload/v1733967739/sail-academy/pdf/modulo1-clase1.pdf')}
             variant="outlined"
           />
           <Button

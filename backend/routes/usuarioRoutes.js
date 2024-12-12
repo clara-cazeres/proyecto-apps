@@ -84,7 +84,6 @@ router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Buscar al usuario por email
     const usuario = await Usuario.findOne({ email });
     if (!usuario) {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
@@ -110,10 +109,8 @@ router.post('/login', async (req, res, next) => {
         id: usuario._id,
         name: usuario.name,
         email: usuario.email,
+        username: usuario.username,
         birthDate: usuario.birthDate,
-        city: usuario.city,
-        country: usuario.country,
-        boatType: usuario.boatType,
         // Agrega más campos según sea necesario
       },
     });
@@ -125,10 +122,9 @@ router.post('/login', async (req, res, next) => {
 // Obtener perfil de un usuario por ID
 
 router.get('/:id', verificarToken, async (req, res) => {
-  const { id } = req.user; // Utiliza el ID del usuario decodificado del token
+  const { id } = req.user; 
   console.log('Usuario autenticado con ID:', id);
 
-  // Verifica si el ID es un ObjectId válido
   if (!mongoose.Types.ObjectId.isValid(id)) {
     console.log('ID inválido:', id);
     return res.status(400).json({ mensaje: 'ID inválido' });

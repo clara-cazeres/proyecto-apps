@@ -21,18 +21,20 @@ const LoginScreen = ({ navigation }) => {
     console.log('Intentando iniciar sesión con:', credentials);
   
     try {
-      const data = await iniciarSesion(credentials); // Llama al servicio de login
+      const data = await iniciarSesion(credentials);
       console.log('Respuesta del backend:', data);
   
       const { token, user } = data;
       if (token) {
         console.log('Token recibido:', token);
+        console.log('infousuario after login:', user);
+
   
         // Despacha la acción de login
         dispatch(login({ token, user }));
   
         Alert.alert('Éxito', 'Inicio de sesión exitoso');
-        navigation.navigate('Home'); // Redirige a la pantalla principal
+        navigation.navigate('Home'); 
       } else {
         Alert.alert('Error', 'No se recibió un token');
       }

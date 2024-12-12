@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {View, TextInput, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import TopNavbar from '../components/TopNavbar';
 import BottomNavbar from '../components/BottomNavbar';
 import ModuleCard from '../components/ModuleCard';
+import SearchBar from '../components/SearchBar';
 import API_BASE_URL from '../api/apiConfig';
 
 const CursosScreen = ({ navigation }) => {
@@ -15,8 +16,12 @@ const CursosScreen = ({ navigation }) => {
       try {
         const response = await fetch(`${API_BASE_URL}/modules`);
         const data = await response.json();
-        setModules(data);
-        setFilteredModules(data);
+        if (Array.isArray(data)) {
+          setModules(data);
+          setFilteredModules(data);
+        } else {
+          console.error('La respuesta no es un array:', data);
+        }
       } catch (error) {
         console.error('Error al cargar los módulos:', error);
       }
@@ -30,9 +35,10 @@ const CursosScreen = ({ navigation }) => {
     if (query.trim() === '') {
       setFilteredModules(modules);
     } else {
-      const filtered = modules.filter((module) =>
-        module.title.toLowerCase().includes(query.toLowerCase()) ||
-        module.description.toLowerCase().includes(query.toLowerCase())
+      const filtered = modules.filter(
+        (module) =>
+          module.title?.toLowerCase().includes(query.toLowerCase()) ||
+          module.description?.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredModules(filtered);
     }
@@ -40,27 +46,19 @@ const CursosScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-   
       <TopNavbar title="CURSO" navigation={navigation} />
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Buscar"
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
-      </View>
+      <SearchBar value={searchQuery} onChangeText={handleSearch} placeholder="Buscar módulos..." />
       <FlatList
         data={filteredModules}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
           <ModuleCard
             module={item}
-            moduleNumber={index + 1} // Calcula el número del módulo correctamente
+            moduleNumber={index + 1}
             onPress={() =>
               navigation.navigate('Module', {
                 moduleId: item._id,
-                moduleNumber: index + 1, // También pásalo al navegar a ModuleScreen
+                moduleNumber: index + 1,
               })
             }
             showExtraInfo={true}
@@ -68,9 +66,6 @@ const CursosScreen = ({ navigation }) => {
         )}
         contentContainerStyle={styles.list}
       />
-
-
-
       <BottomNavbar navigation={navigation} />
     </View>
   );
@@ -80,18 +75,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f9f9',
-  },
-  searchContainer: {
-    paddingHorizontal: 15,
-    marginVertical: 20,
-  },
-  searchInput: {
-    height: 40,
-    borderWidth: 0,
-    borderRadius: 40,
-    paddingHorizontal: 10,
-    backgroundColor: '#E4E4E4',
-    fontWeight: 'light',
   },
   list: {
     paddingHorizontal: 15,
